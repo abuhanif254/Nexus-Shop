@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { products } from "@/db/schema";
@@ -38,3 +39,4 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Failed to search products" }, { status: 500 });
   }
 }
+

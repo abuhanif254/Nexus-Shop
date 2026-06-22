@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { wishlists, products } from "@/db/schema";
@@ -65,3 +66,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Failed to update wishlist" }, { status: 500 });
   }
 }
+
