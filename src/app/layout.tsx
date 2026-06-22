@@ -1,5 +1,4 @@
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
 
 import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
