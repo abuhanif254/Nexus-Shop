@@ -14,8 +14,8 @@ export async function GET() {
       hasEnv: !!env,
       envKeys: Object.keys(env),
       hasDbBinding: !!env.DB,
-      hasAuthSecret: !!process.env.AUTH_SECRET || !!env.AUTH_SECRET,
-      hasGoogleId: !!process.env.GOOGLE_CLIENT_ID || !!env.GOOGLE_CLIENT_ID,
+      hasAuthSecret: !!process.env.AUTH_SECRET || !!(env as any).AUTH_SECRET,
+      hasGoogleId: !!process.env.GOOGLE_CLIENT_ID || !!(env as any).GOOGLE_CLIENT_ID,
       nodeEnv: process.env.NODE_ENV,
     });
   } catch (error: any) {
