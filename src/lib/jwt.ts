@@ -1,0 +1,25 @@
+import { SignJWT, jwtVerify } from 'jose';
+
+// In production, always use environment variables!
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || 'super-secret-key-for-dev-only'
+);
+
+export async function signToken(payload: any) {
+  const jwt = await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('24h')
+    .sign(JWT_SECRET);
+  
+  return jwt;
+}
+
+export async function verifyToken(token: string) {
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    return payload;
+  } catch (error) {
+    return null;
+  }
+}
