@@ -3,8 +3,6 @@ import { posts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import Image from "next/image";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 
 export const dynamic = 'force-dynamic';
 
@@ -16,8 +14,6 @@ export default async function BlogIndexPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      
       <main className="flex-1 bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -76,8 +72,6 @@ export default async function BlogIndexPage() {
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

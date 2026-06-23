@@ -3,8 +3,6 @@ import { posts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -33,8 +31,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Header />
-      
       <main className="flex-1 pb-16">
         {post.featuredImage && (
           <div className="w-full h-[40vh] md:h-[50vh] relative bg-gray-100">
@@ -70,8 +66,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           />
         </article>
       </main>
-
-      <Footer />
     </div>
   );
 }
