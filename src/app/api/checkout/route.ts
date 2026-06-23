@@ -165,7 +165,66 @@ export async function POST(req: Request) {
       }
     }
 
-    // For Cash on Delivery or Mobile Banking, we immediately redirect to success.
+    if (paymentMethod === 'SSLCOMMERZ') {
+      const SSLCommerzPayment = require('sslcommerz-lts');
+      const store_id = process.env.STORE_ID || 'nexus6a39eba39cefb';
+      const store_passwd = process.env.STORE_PASSWORD || 'nexus6a39eba39cefb@ssl';
+      const is_live = false; // true for live, false for sandbox
+
+      const origin = req.headers.get('origin') || 'http://localhost:3000';
+
+      const data = {
+          total_amount: calculatedTotal * 115, // Assuming shop is in USD, converting to BDT
+          currency: 'BDT',
+          tran_id: orderId, // unique transaction id
+          success_url: `${origin}/api/webhooks/sslcommerz?status=success&orderId=${orderId}`,
+          fail_url: `${origin}/api/webhooks/sslcommerz?status=fail&orderId=${orderId}`,
+          cancel_url: `${origin}/api/webhooks/sslcommerz?status=cancel&orderId=${orderId}`,
+          ipn_url: `${origin}/api/webhooks/sslcommerz?status=ipn`,
+          shipping_method: 'Courier',
+          product_name: 'Besa Store Items',
+          product_category: 'Ecommerce',
+          product_profile: 'general',
+          cus_name: shippingAddress.fullName || 'Customer Name',
+          cus_email: shippingAddress.email || 'customer@example.com',
+          cus_add1: shippingAddress.addressLine1 || 'Dhaka',
+          cus_add2: 'Dhaka',
+          cus_city: shippingAddress.city || 'Dhaka',
+          cus_state: 'Dhaka',
+          cus_postcode: shippingAddress.postalCode || '1000',
+          cus_country: 'Bangladesh',
+          cus_phone: shippingAddress.phone || '01711111111',
+          cus_fax: '01711111111',
+          ship_name: shippingAddress.fullName || 'Customer Name',
+          ship_add1: shippingAddress.addressLine1 || 'Dhaka',
+          ship_add2: 'Dhaka',
+          ship_city: shippingAddress.city || 'Dhaka',
+          ship_state: 'Dhaka',
+          ship_postcode: shippingAddress.postalCode || '1000',
+          ship_country: 'Bangladesh',
+      };
+      
+      const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
+      
+      try {
+        const apiResponse = await sslcz.init(data);
+        if (apiResponse?.GatewayPageURL) {
+          return NextResponse.json({
+            success: true,
+            orderId,
+            url: apiResponse.GatewayPageURL,
+            message: "Redirecting to SSLCommerz..."
+          }, { status: 201 });
+        } else {
+          throw new Error('No GatewayPageURL found in SSLCommerz response');
+        }
+      } catch (e: any) {
+         console.error("SSLCommerz initialization failed", e);
+         return NextResponse.json({ error: "Failed to initialize SSLCommerz" }, { status: 500 });
+      }
+    }
+
+    // For Cash on Delivery we immediately redirect to success.
     return NextResponse.json({ 
       success: true, 
       orderId, 

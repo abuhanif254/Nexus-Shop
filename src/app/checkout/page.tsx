@@ -241,16 +241,16 @@ export default function CheckoutPage() {
                     </div>
                   </label>
 
-                  {/* bKash */}
-                  <label className={`flex items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${paymentMethod === 'BKASH' ? 'border-[#E2136E] bg-pink-50/50 dark:bg-pink-950/20' : 'border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 bg-gray-50/50 dark:bg-[#111111]'}`}>
-                    <input type="radio" name="payment" value="BKASH" checked={paymentMethod === 'BKASH'} onChange={(e) => setPaymentMethod(e.target.value)} className="w-5 h-5 text-[#E2136E] focus:ring-[#E2136E] bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700" />
+                  {/* SSLCommerz */}
+                  <label className={`flex items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${paymentMethod === 'SSLCOMMERZ' ? 'border-[#008940] bg-green-50/50 dark:bg-green-950/20' : 'border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 bg-gray-50/50 dark:bg-[#111111]'}`}>
+                    <input type="radio" name="payment" value="SSLCOMMERZ" checked={paymentMethod === 'SSLCOMMERZ'} onChange={(e) => setPaymentMethod(e.target.value)} className="w-5 h-5 text-[#008940] focus:ring-[#008940] bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700" />
                     <div className="ml-5 flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${paymentMethod === 'BKASH' ? 'bg-white dark:bg-gray-900 shadow-sm' : 'bg-transparent'}`}>
-                        <div className="w-8 h-8 bg-[#E2136E] rounded flex items-center justify-center text-white font-black text-[10px] tracking-tighter">bKash</div>
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${paymentMethod === 'SSLCOMMERZ' ? 'bg-white dark:bg-gray-900 shadow-sm' : 'bg-transparent'}`}>
+                        <div className="w-8 h-8 bg-[#008940] rounded flex items-center justify-center text-white font-black text-[10px] tracking-tighter text-center leading-none">SSL</div>
                       </div>
                       <div>
-                        <p className={`font-bold ${paymentMethod === 'BKASH' ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>bKash Mobile Menu</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Pay directly from your bKash app</p>
+                        <p className={`font-bold ${paymentMethod === 'SSLCOMMERZ' ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>bKash, Nagad, BD Cards</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Secure payment via SSLCommerz</p>
                       </div>
                     </div>
                   </label>
