@@ -32,7 +32,7 @@ export default function RevenueChart({ data }: { data: any[] }) {
         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
         <Tooltip 
           contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-          formatter={(value: number) => [`$${value.toFixed(2)}`, 'Revenue']}
+          formatter={(value: any) => [`$${Number(value).toFixed(2)}`, 'Revenue']}
           labelFormatter={(label) => new Date(label).toLocaleDateString()}
         />
         <Area type="monotone" dataKey="revenue" stroke="#F25F19" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
