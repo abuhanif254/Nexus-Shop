@@ -1,0 +1,85 @@
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+import FilterSidebar from "@/components/category/FilterSidebar";
+import MobileFilterWrapper from "@/components/category/MobileFilterWrapper";
+import CategoryPills from "@/components/category/CategoryPills";
+import SortBar from "@/components/category/SortBar";
+import ProductGrid from "@/components/category/ProductGrid";
+import type { Metadata } from "next";
+
+export const revalidate = 3600; // Cache for 1 hour
+
+export const metadata: Metadata = {
+  title: "Shop All Products | Nexus Shop",
+  description: "Browse our entire catalog of products at Nexus Shop. Find the best deals on electronics, home appliances, fashion, and more.",
+};
+
+export default function ShopPage() {
+  const titleName = "All Products";
+
+  // SEO: ItemList Schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": titleName,
+        "url": `https://www.shop.nexuscalculator.net/shop`
+      }
+    ]
+  };
+
+  return (
+    <div className="bg-gray-50 min-h-screen py-8">
+      {/* Inject JSON-LD Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="container mx-auto px-4">
+        
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <Link href="/" className="hover:text-brand-orange transition-colors">Home</Link>
+          <ChevronRight size={14} />
+          <span className="text-gray-400 capitalize">Shop</span>
+        </nav>
+
+        {/* Page Header */}
+        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-8 flex justify-between items-end">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 capitalize mb-2">{titleName}</h1>
+            <p className="text-gray-500 text-sm">Showing all available products in our store</p>
+          </div>
+        </div>
+
+        {/* Layout wrapper */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          
+          {/* Sidebar Area */}
+          <div className="w-full lg:w-1/4">
+            <MobileFilterWrapper>
+              <FilterSidebar />
+            </MobileFilterWrapper>
+          </div>
+
+          {/* Main Content Area */}
+          <div className="w-full lg:w-3/4">
+             {/* Category Pills Navigation */}
+             <CategoryPills />
+
+             {/* Controls */}
+             <SortBar />
+
+             {/* Grid */}
+             {/* Using slug="search" will hit /api/search without a 'q' query, returning all products! */}
+             <ProductGrid slug="search" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
