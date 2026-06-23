@@ -1,10 +1,10 @@
 import { db } from "@/db";
 import { posts } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and, not, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, Clock, Facebook, Twitter, Linkedin, Link2, Mail } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -36,8 +36,36 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = data[0];
   const readingTime = getReadingTime(post.content);
 
+  // Fetch related posts (Step 8)
+  const relatedPosts = await db.select()
+    .from(posts)
+    .where(and(eq(posts.isPublished, true), not(eq(posts.id, post.id))))
+    .orderBy(desc(posts.publishedAt))
+    .limit(3);
+
+  // Structured Data (Step 9)
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    image: post.featuredImage ? [post.featuredImage] : [],
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt?.toISOString(),
+    author: [{
+      '@type': 'Organization',
+      name: 'Nexus Shop',
+      url: 'https://nexus-shop.com'
+    }]
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* Step 9: Inject JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <main className="flex-1 pb-24">
         {post.featuredImage && (
           <div className="w-full h-[50vh] md:h-[60vh] relative bg-brand-dark">
@@ -54,7 +82,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 relative z-10 -mt-20 md:-mt-32">
           
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-16">
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-16 mb-12">
             {!post.featuredImage && (
               <Link href="/blog" className="inline-flex items-center text-brand-orange hover:text-orange-600 mb-8 font-bold transition-colors">
                 <ArrowLeft size={18} className="mr-2" /> Back to all articles
@@ -80,7 +108,79 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               className="prose prose-lg md:prose-xl prose-orange max-w-none prose-img:rounded-2xl prose-a:text-brand-orange prose-a:font-bold prose-headings:font-black prose-p:leading-relaxed prose-p:text-gray-600 mx-auto"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
+
+            {/* Step 7: Social Sharing */}
+            <div className="mt-16 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="font-bold text-gray-900">Share this article:</div>
+              <div className="flex items-center gap-3">
+                <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#1DA1F2] hover:text-white transition-all">
+                  <Twitter size={20} />
+                </a>
+                <a href={`https://www.facebook.com/sharer/sharer.php?u=`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#4267B2] hover:text-white transition-all">
+                  <Facebook size={20} />
+                </a>
+                <a href={`https://www.linkedin.com/shareArticle?mini=true&title=${encodeURIComponent(post.title)}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#0077b5] hover:text-white transition-all">
+                  <Linkedin size={20} />
+                </a>
+                <button className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-brand-dark hover:text-white transition-all">
+                  <Link2 size={20} />
+                </button>
+              </div>
+            </div>
           </div>
+
+          {/* Step 10: Newsletter CTA */}
+          <div className="bg-brand-dark rounded-3xl p-8 md:p-12 mb-16 text-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange opacity-20 blur-[100px] rounded-full"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500 opacity-20 blur-[100px] rounded-full"></div>
+            
+            <div className="relative z-10 max-w-2xl mx-auto">
+              <Mail className="w-12 h-12 text-brand-orange mx-auto mb-6" />
+              <h3 className="text-3xl font-black text-white mb-4">Never miss an update</h3>
+              <p className="text-gray-300 mb-8 text-lg">
+                Join our newsletter to receive the latest articles, industry trends, and exclusive offers directly in your inbox.
+              </p>
+              <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input 
+                  type="email" 
+                  placeholder="Your email address" 
+                  className="flex-1 px-6 py-4 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-orange"
+                  required
+                />
+                <button type="submit" className="px-8 py-4 bg-brand-orange text-white font-bold rounded-xl hover:bg-orange-600 transition-colors shadow-lg">
+                  Subscribe
+                </button>
+              </form>
+            </div>
+          </div>
+
+          {/* Step 8: Related Posts */}
+          {relatedPosts.length > 0 && (
+            <div className="border-t border-gray-200 pt-16">
+              <h2 className="text-3xl font-black text-gray-900 mb-8 text-center">Read Next</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedPosts.map((rp) => (
+                  <Link key={rp.id} href={`/blog/${rp.slug}`} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                    <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                      {rp.featuredImage ? (
+                        <Image src={rp.featuredImage} alt={rp.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-brand-orange font-bold text-2xl">{rp.title.charAt(0)}</div>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <p className="text-xs font-bold text-brand-orange uppercase tracking-wider mb-2">
+                        {rp.publishedAt ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(rp.publishedAt)) : ''}
+                      </p>
+                      <h3 className="text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-brand-orange transition-colors">
+                        {rp.title}
+                      </h3>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </article>
       </main>
     </div>

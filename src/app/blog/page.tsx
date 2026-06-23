@@ -3,7 +3,7 @@ import { posts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock } from "lucide-react";
+import { Clock, Mail } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -157,6 +157,32 @@ export default async function BlogIndexPage() {
               ))}
             </div>
           )}
+
+          {/* Step 10: Newsletter CTA (Feed) */}
+          <div className="mt-20 bg-brand-dark rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange opacity-20 blur-[100px] rounded-full"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500 opacity-20 blur-[100px] rounded-full"></div>
+            
+            <div className="relative z-10 max-w-2xl mx-auto">
+              <Mail className="w-12 h-12 text-brand-orange mx-auto mb-6" />
+              <h3 className="text-3xl font-black text-white mb-4">Subscribe to The Nexus Journal</h3>
+              <p className="text-gray-300 mb-8 text-lg">
+                Get the latest articles, industry insights, and exclusive content delivered straight to your inbox.
+              </p>
+              <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input 
+                  type="email" 
+                  placeholder="Your email address" 
+                  className="flex-1 px-6 py-4 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-orange"
+                  required
+                />
+                <button type="submit" className="px-8 py-4 bg-brand-orange text-white font-bold rounded-xl hover:bg-orange-600 transition-colors shadow-lg">
+                  Subscribe
+                </button>
+              </form>
+            </div>
+          </div>
+
         </div>
       </main>
     </div>
