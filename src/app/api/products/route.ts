@@ -6,8 +6,7 @@ import { eq } from 'drizzle-orm';
 
 
 
-export const revalidate = 3600; // Cache for 1 hour at the Edge
-
+export const dynamic = 'force-dynamic';
 const mockProducts = [
   {
     id: '1',
