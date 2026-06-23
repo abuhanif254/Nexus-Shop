@@ -1,4 +1,4 @@
-export const runtime = 'edge';
+
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { orders, orderItems, shippingAddresses, products } from "@/db/schema";
