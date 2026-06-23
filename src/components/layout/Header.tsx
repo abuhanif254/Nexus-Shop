@@ -163,6 +163,7 @@ export default function Header() {
                       <p className="text-gray-500 text-xs truncate">{session.user?.email}</p>
                     </div>
                     <ul className="text-gray-600 text-sm">
+                      <li className="px-4 py-2 hover:bg-orange-50 hover:text-brand-orange transition-colors"><Link href="/admin/products">Admin Dashboard</Link></li>
                       <li className="px-4 py-2 hover:bg-orange-50 hover:text-brand-orange transition-colors"><Link href="/account/orders">Order History</Link></li>
                       <li className="px-4 py-2 hover:bg-orange-50 hover:text-brand-orange transition-colors"><Link href="/wishlist">Wishlist</Link></li>
                       <li className="px-4 py-2 hover:bg-orange-50 text-red-500 hover:text-red-600 transition-colors cursor-pointer border-t border-gray-50 mt-1 flex items-center gap-2" onClick={() => signOut()}>
@@ -462,6 +463,7 @@ export default function Header() {
                       <p className="text-gray-500 text-xs">{session.user?.email}</p>
                     </div>
                   </div>
+                  <Link href="/admin/products" className="block text-gray-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Admin Dashboard</Link>
                   <Link href="/account/orders" className="block text-gray-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Order History</Link>
                   <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="flex items-center gap-2 text-red-500 font-semibold mt-4">
                     <LogOut size={20} /> Logout

@@ -113,7 +113,7 @@ export default function AddEditProductModal({ isOpen, onClose, product }: AddEdi
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-semibold text-gray-700">Image Name (e.g. 'headphone') *</label>
+            <label className="text-sm font-semibold text-gray-700">Image URL or Name (e.g. 'headphone') *</label>
             <input required name="image" value={formData.image} onChange={handleChange} className="w-full border border-gray-300 rounded p-2" />
           </div>
 
