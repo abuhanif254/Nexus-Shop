@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Clock, Link2, Mail } from "lucide-react";
 import BlogSidebar from "@/components/blog/BlogSidebar";
+import ReadingProgress from "@/components/blog/ReadingProgress";
 
 export const dynamic = 'force-dynamic';
 
@@ -60,7 +61,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white relative">
+      <ReadingProgress />
+      
       {/* Step 9: Inject JSON-LD */}
       <script
         type="application/ld+json"
@@ -68,46 +71,55 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       />
 
       <main className="flex-1 pb-24">
-        {post.featuredImage && (
-          <div className="w-full h-[50vh] md:h-[60vh] relative bg-brand-dark">
-            <Image 
-              src={post.featuredImage} 
-              alt={post.title} 
-              fill 
-              className="object-cover opacity-90"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
+        {/* HERO SECTION */}
+        <div className="w-full relative bg-brand-dark pt-32 pb-24 px-4 sm:px-6 lg:px-8">
+          {post.featuredImage && (
+            <>
+              <Image 
+                src={post.featuredImage} 
+                alt={post.title} 
+                fill 
+                className="object-cover opacity-40"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/80 to-transparent" />
+            </>
+          )}
+          
+          <div className="relative z-10 max-w-4xl mx-auto text-center mt-12">
+            {!post.featuredImage && (
+              <Link href="/blog" className="inline-flex items-center text-brand-orange hover:text-orange-400 mb-8 font-bold transition-colors">
+                <ArrowLeft size={18} className="mr-2" /> Back to Journal
+              </Link>
+            )}
+            <div className="flex items-center justify-center gap-4 text-sm font-bold text-gray-400 mb-6 uppercase tracking-widest">
+              <span>
+                {post.publishedAt ? new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(post.publishedAt)) : ''}
+              </span>
+              <span className="text-gray-600">•</span>
+              <span className="flex items-center gap-1.5 text-brand-orange">
+                <Clock size={16} /> {readingTime} MIN READ
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-[1.1] mb-6 tracking-tight">
+              {post.title}
+            </h1>
+            {post.excerpt && (
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                {post.excerpt}
+              </p>
+            )}
           </div>
-        )}
+        </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 -mt-20 md:-mt-32">
-          <div className="flex flex-col lg:flex-row gap-12">
+        {/* SEAMLESS BODY LAYOUT */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
             
             {/* LEFT COLUMN: ARTICLE CONTENT (70%) */}
             <article className="w-full lg:w-[70%]">
               
-              <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 xl:p-16 mb-12">
-                {!post.featuredImage && (
-                  <Link href="/blog" className="inline-flex items-center text-brand-orange hover:text-orange-600 mb-8 font-bold transition-colors">
-                    <ArrowLeft size={18} className="mr-2" /> Back to all articles
-                  </Link>
-                )}
-
-                <header className="mb-12 text-center border-b border-gray-100 pb-12">
-                  <div className="flex items-center justify-center gap-4 text-sm font-bold text-gray-500 mb-6 uppercase tracking-widest">
-                    <span>
-                      {post.publishedAt ? new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(post.publishedAt)) : ''}
-                    </span>
-                    <span className="text-gray-300">•</span>
-                    <span className="flex items-center gap-1.5 text-brand-orange">
-                      <Clock size={16} /> {readingTime} MIN READ
-                    </span>
-                  </div>
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.1] mb-6 tracking-tight">
-                    {post.title}
-                  </h1>
-                </header>
+              <div className="mb-12">
 
                 <div 
                   className="prose prose-lg md:prose-xl prose-orange max-w-none 
