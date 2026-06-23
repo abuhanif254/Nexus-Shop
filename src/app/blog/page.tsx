@@ -14,14 +14,30 @@ export default async function BlogIndexPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-gray-50 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">Our Blog</h1>
-            <p className="mt-4 text-xl text-gray-500 max-w-2xl mx-auto">
-              Latest news, tips, and articles.
-            </p>
+      {/* DYNAMIC HERO BANNER */}
+      <div className="bg-brand-dark py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Background Image & Overlay */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop')] opacity-20 bg-cover bg-center" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-brand-dark/95" />
+        
+        {/* Content */}
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center justify-center px-4 py-1.5 mb-6 rounded-full bg-brand-orange/20 border border-brand-orange/30 backdrop-blur-md">
+            <span className="text-sm font-bold text-brand-orange tracking-wider uppercase">
+              The Nexus Journal
+            </span>
           </div>
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+            Insights, Trends & <br className="hidden md:block" /> Industry Expertise
+          </h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            Discover the latest news, expert tips, and deep dives into the world of e-commerce, technology, and lifestyle.
+          </p>
+        </div>
+      </div>
+
+      <main className="flex-1 bg-gray-50 py-16 -mt-8 relative z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {publishedPosts.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
