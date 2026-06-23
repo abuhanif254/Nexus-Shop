@@ -239,7 +239,7 @@ export default function Header() {
 
             {/* Mega Search Dropdown */}
             {isSearchFocused && (
-              <div className="absolute top-full left-0 right-0 mt-2 glass dark:glass-darker rounded-xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6 z-50 animate-in fade-in slide-in-from-top-2">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#111111] rounded-xl shadow-[0_30px_60px_rgba(0,0,0,0.15)] dark:shadow-2xl border border-gray-200 dark:border-gray-800 p-6 z-50 animate-in fade-in slide-in-from-top-2">
                 <div className="grid grid-cols-3 gap-6">
                   {/* Recent Searches */}
                   <div className="col-span-1 border-r border-gray-100 pr-4">
@@ -370,10 +370,10 @@ export default function Header() {
             <span className="text-white">All Departments</span>
             
             {/* Mega Menu Dropdown (visible on hover) */}
-            <div className="absolute top-full left-0 w-[850px] glass dark:glass-darker shadow-[0_30px_60px_rgba(0,0,0,0.1)] dark:shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform translate-y-2 group-hover:translate-y-0 rounded-br-2xl rounded-bl-2xl overflow-hidden flex border-t-0 border border-gray-100 dark:border-gray-800">
+            <div className="absolute top-full left-0 w-[850px] bg-white dark:bg-[#111111] shadow-[0_30px_60px_rgba(0,0,0,0.2)] dark:shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform translate-y-2 group-hover:translate-y-0 rounded-br-2xl rounded-bl-2xl overflow-hidden flex border-t-0 border border-gray-200 dark:border-gray-800">
               
               {/* Columns */}
-              <div className="flex-1 p-8 grid grid-cols-3 gap-8 bg-white/40 dark:bg-[#111111]/40">
+              <div className="flex-1 p-8 grid grid-cols-3 gap-8">
                 {/* Column 1 */}
                 <div>
                   <h4 className="text-brand-dark dark:text-white font-black mb-4 pb-2 border-b border-gray-100 dark:border-gray-800 tracking-tight">Electronics</h4>
