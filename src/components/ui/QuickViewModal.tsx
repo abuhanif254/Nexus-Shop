@@ -101,8 +101,8 @@ export default function QuickViewModal({ isOpen, onClose, product }: QuickViewMo
 
           {/* Pricing */}
           <div className="flex items-end gap-4 mb-6">
-            <span className="text-4xl font-black text-brand-dark dark:text-white">${product.price.toFixed(2)}</span>
-            {product.oldPrice > product.price && (
+            <span className="text-4xl font-black text-brand-dark dark:text-white">${product.price?.toFixed(2)}</span>
+            {product.oldPrice != null && product.oldPrice > product.price && (
               <span className="text-xl text-gray-400 dark:text-gray-500 line-through pb-1">${product.oldPrice.toFixed(2)}</span>
             )}
           </div>

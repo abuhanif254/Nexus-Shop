@@ -149,8 +149,10 @@ export default function ProductCard({
 
         {/* Pricing */}
         <div className="flex items-end gap-2 mt-2">
-          <span className="text-brand-orange font-bold text-xl">${price.toFixed(2)}</span>
-          <span className="text-gray-400 text-xs line-through pb-1">${oldPrice.toFixed(2)}</span>
+          <span className="text-brand-orange font-bold text-xl">${price?.toFixed(2)}</span>
+          {oldPrice != null && (
+            <span className="text-gray-400 text-xs line-through pb-1">${oldPrice.toFixed(2)}</span>
+          )}
         </div>
 
         {/* Vendor */}
