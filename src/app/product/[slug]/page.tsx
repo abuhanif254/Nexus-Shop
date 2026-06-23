@@ -37,8 +37,9 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          // Find product by slug match
-          const found = data.data.find((p: any) => p.title.toLowerCase().replace(/ /g, '-') === unwrappedParams.slug);
+          // Find product by slug match, ensuring we decode any URL characters
+          const decodedSlug = decodeURIComponent(unwrappedParams.slug);
+          const found = data.data.find((p: any) => p.title.toLowerCase().replace(/ /g, '-') === decodedSlug);
           setProduct(found);
         }
         setLoading(false);
@@ -74,7 +75,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         id: `${product.id}-${selectedVariantColor?.id}-${selectedVariantSize?.id}`,
         title: variantTitle,
         price: currentPrice,
-        image: `/${product.image}.jpg`,
+        image: product.image,
         brand: product.brand
       });
     }
@@ -85,7 +86,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
       id: product.id,
       title: product.title,
       price: product.price,
-      image: `/${product.image}.jpg`,
+      image: product.image,
       brand: product.brand
     });
   };
@@ -114,7 +115,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
           
           {/* Left: Image Gallery */}
           <div className="w-full lg:w-1/2">
-            <ImageGallery images={[`/${product.image}.jpg`, "/mock-product-2.jpg", "/mock-product-3.jpg"]} />
+            <ImageGallery images={[product.image, "/mock-product-2.jpg", "/mock-product-3.jpg"]} />
             
             {/* Mobile Floating Actions (Wishlist/Share) that were inside the old image container */}
             <div className="flex gap-3 md:hidden mt-4 justify-end">

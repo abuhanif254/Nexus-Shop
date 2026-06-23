@@ -81,7 +81,7 @@ export default function ProductCard({
 
       {/* Image Placeholder */}
       <Link href={`/product/${title.toLowerCase().replace(/ /g, '-')}`} className="block relative aspect-square mb-4 overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-900">
-        {image && image.startsWith('/') ? (
+        {image ? (
           <Image 
             src={image} 
             alt={title} 
