@@ -25,7 +25,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://saheragroup.com'),
+  metadataBase: new URL('https://www.shop.nexuscalculator.net'),
   title: {
     default: "Nexus Shop | Premium E-Commerce by Sahera Group",
     template: "%s | Nexus Shop"
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nexus Shop | Premium E-Commerce by Sahera Group",
     description: "Discover the best products at Nexus Shop. A proud company of Sahera Group.",
-    url: "https://www.saheragroup.com",
+    url: "https://www.shop.nexuscalculator.net",
     siteName: "Nexus Shop",
     locale: "en_US",
     type: "website",
@@ -61,9 +61,9 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               "name": "Nexus Shop",
-              "image": "https://www.saheragroup.com/logo.png",
-              "@id": "https://www.saheragroup.com",
-              "url": "https://www.saheragroup.com",
+              "image": "https://www.shop.nexuscalculator.net/logo.png",
+              "@id": "https://www.shop.nexuscalculator.net",
+              "url": "https://www.shop.nexuscalculator.net",
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "2300 Kishoreganj Sadar",
@@ -73,7 +73,7 @@ export default function RootLayout({
               "parentOrganization": {
                 "@type": "Organization",
                 "name": "Sahera Group",
-                "url": "https://www.saheragroup.com"
+                "url": "https://www.shop.nexuscalculator.net"
               }
             })
           }}

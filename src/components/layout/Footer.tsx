@@ -29,7 +29,7 @@ export default function Footer() {
             <h3 className="text-2xl font-black text-brand-orange tracking-tighter mb-6">NEXUS<span className="text-brand-dark dark:text-white"> SHOP</span></h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
               We are a premium e-commerce platform offering the highest quality products with world-class customer service and fast shipping globally. <br /><br />
-              <span className="font-semibold text-gray-700 dark:text-gray-200">A proud company of <a href="https://www.saheragroup.com" target="_blank" rel="noopener noreferrer" className="text-brand-orange hover:underline">Sahera Group</a>.</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-200">A proud company of <a href="https://www.shop.nexuscalculator.net" target="_blank" rel="noopener noreferrer" className="text-brand-orange hover:underline">Sahera Group</a>.</span>
             </p>
             <div className="flex gap-4">
               <a href="#" className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center hover:bg-brand-orange dark:hover:bg-brand-orange hover:text-white transition-colors text-xs font-bold text-gray-600 dark:text-gray-300">FB</a>
@@ -59,7 +59,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-brand-orange shrink-0" />
-                <span>support@saheragroup.com</span>
+                <span>support@shop.nexuscalculator.net</span>
               </li>
             </ul>
           </div>

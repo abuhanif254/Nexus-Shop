@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.saheragroup.com';
+  const baseUrl = 'https://www.shop.nexuscalculator.net';
 
   // Fetch dynamic data
   let allProducts: any[] = [];

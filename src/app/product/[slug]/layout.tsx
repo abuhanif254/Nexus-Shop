@@ -22,7 +22,7 @@ export async function generateMetadata(
 
     if (product) {
       const description = `Buy ${product.title} by ${product.brand} for $${product.price}. Enjoy premium quality and fast delivery.`;
-      const imageUrl = product.image.startsWith('http') ? product.image : `https://www.saheragroup.com${product.image.startsWith('/') ? product.image : `/${product.image}.jpg`}`;
+      const imageUrl = product.image.startsWith('http') ? product.image : `https://www.shop.nexuscalculator.net${product.image.startsWith('/') ? product.image : `/${product.image}.jpg`}`;
 
       return {
         title: `${product.title} | Nexus Shop`,
@@ -30,7 +30,7 @@ export async function generateMetadata(
         openGraph: {
           title: product.title,
           description,
-          url: `https://www.saheragroup.com/product/${slug}`,
+          url: `https://www.shop.nexuscalculator.net/product/${slug}`,
           siteName: 'Nexus Shop',
           images: [
             {
@@ -72,7 +72,7 @@ export default async function ProductLayout({ children, params }: Props) {
     const allProducts = await db.select().from(products);
     const product = allProducts.find((p: any) => p.title.toLowerCase().replace(/ /g, '-') === slug);
     if (product) {
-      const imageUrl = product.image.startsWith('http') ? product.image : `https://www.saheragroup.com${product.image.startsWith('/') ? product.image : `/${product.image}.jpg`}`;
+      const imageUrl = product.image.startsWith('http') ? product.image : `https://www.shop.nexuscalculator.net${product.image.startsWith('/') ? product.image : `/${product.image}.jpg`}`;
       
       productSchema = {
         "@context": "https://schema.org/",
@@ -87,7 +87,7 @@ export default async function ProductLayout({ children, params }: Props) {
         },
         "offers": {
           "@type": "Offer",
-          "url": `https://www.saheragroup.com/product/${slug}`,
+          "url": `https://www.shop.nexuscalculator.net/product/${slug}`,
           "priceCurrency": "USD",
           "price": product.price,
           "availability": product.totalStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
@@ -108,19 +108,19 @@ export default async function ProductLayout({ children, params }: Props) {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://www.saheragroup.com"
+            "item": "https://www.shop.nexuscalculator.net"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Shop",
-            "item": "https://www.saheragroup.com/shop"
+            "item": "https://www.shop.nexuscalculator.net/shop"
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": product.title,
-            "item": `https://www.saheragroup.com/product/${slug}`
+            "item": `https://www.shop.nexuscalculator.net/product/${slug}`
           }
         ]
       };

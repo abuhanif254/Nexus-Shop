@@ -18,7 +18,7 @@ export async function generateMetadata(
     openGraph: {
       title: `${categoryTitle} | Nexus Shop`,
       description: `Browse our extensive collection of ${categoryTitle.toLowerCase()}. Find the best deals and premium quality products.`,
-      url: `https://www.saheragroup.com/category/${slug}`,
+      url: `https://www.shop.nexuscalculator.net/category/${slug}`,
       siteName: 'Nexus Shop',
       locale: 'en_US',
       type: 'website',

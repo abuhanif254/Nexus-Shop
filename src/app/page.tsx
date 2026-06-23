@@ -23,10 +23,10 @@ export default async function Home() {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'Nexus Shop',
-      url: 'https://www.saheragroup.com',
+      url: 'https://www.shop.nexuscalculator.net',
       potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://www.saheragroup.com/search?q={search_term_string}',
+        target: 'https://www.shop.nexuscalculator.net/search?q={search_term_string}',
         'query-input': 'required name=search_term_string',
       },
     },
@@ -34,8 +34,8 @@ export default async function Home() {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: 'Nexus Shop',
-      url: 'https://www.saheragroup.com',
-      logo: 'https://www.saheragroup.com/logo.png',
+      url: 'https://www.shop.nexuscalculator.net',
+      logo: 'https://www.shop.nexuscalculator.net/logo.png',
       contactPoint: {
         '@type': 'ContactPoint',
         telephone: '+1-800-555-0199',

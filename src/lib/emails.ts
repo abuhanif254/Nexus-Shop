@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || 're_mock_key');
 export async function sendOrderReceiptEmail(email: string, orderId: string, amount: number) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Nexus Shop <orders@saheragroup.com>', // This domain must be verified in Resend
+      from: 'Nexus Shop <orders@shop.nexuscalculator.net>', // This domain must be verified in Resend
       to: [email],
       subject: `Order Receipt: ${orderId.split('-')[0].toUpperCase()}`,
       html: `

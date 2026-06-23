@@ -24,7 +24,7 @@ export default async function BlogPostPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": title,
-    "image": "https://www.saheragroup.com/blog-placeholder.jpg",
+    "image": "https://www.shop.nexuscalculator.net/blog-placeholder.jpg",
     "datePublished": date,
     "dateModified": date,
     "author": {
@@ -36,7 +36,7 @@ export default async function BlogPostPage({ params }: Props) {
       "name": "Nexus Shop",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.saheragroup.com/logo.png"
+        "url": "https://www.shop.nexuscalculator.net/logo.png"
       }
     }
   };
