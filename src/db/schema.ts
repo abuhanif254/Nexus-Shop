@@ -13,6 +13,7 @@ export const products = pgTable('products', {
   soldCount: integer('sold_count').default(0),
   totalStock: integer('total_stock').notNull().default(0),
   vendor: text('vendor'),
+  description: text('description'),
   image: text('image').notNull(),
   featured: boolean('featured').default(false),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull(),

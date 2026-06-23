@@ -24,6 +24,7 @@ export default function AddEditProductModal({ isOpen, onClose, product }: AddEdi
     totalStock: product?.totalStock || "",
     image: product?.image || "",
     vendor: product?.vendor || "",
+    description: product?.description || "",
     featured: product?.featured || false,
   });
 
@@ -115,6 +116,11 @@ export default function AddEditProductModal({ isOpen, onClose, product }: AddEdi
           <div className="space-y-1">
             <label className="text-sm font-semibold text-gray-700">Image URL or Name (e.g. 'headphone') *</label>
             <input required name="image" value={formData.image} onChange={handleChange} className="w-full border border-gray-300 rounded p-2" />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-semibold text-gray-700">Description</label>
+            <textarea name="description" value={formData.description || ""} onChange={handleChange as any} className="w-full border border-gray-300 rounded p-2 min-h-[100px]" placeholder="Enter product description..."></textarea>
           </div>
 
           <div className="flex items-center gap-2 mt-4">

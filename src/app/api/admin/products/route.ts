@@ -7,10 +7,9 @@ import { auth } from '@/auth';
 
 
 
-// Require Admin (for now, we just require authentication)
 async function requireAuth() {
   const session = await auth();
-  if (!session?.user) {
+  if (!session?.user || session.user.email !== "mohammadbitullah3@gmail.com") {
     throw new Error('Unauthorized');
   }
   return session.user;
@@ -42,6 +41,7 @@ export async function POST(request: Request) {
       totalStock: body.totalStock ? parseInt(body.totalStock) : 0,
       image: body.image || 'placeholder',
       vendor: body.vendor || null,
+      description: body.description || null,
       featured: body.featured === true,
       createdAt: new Date(),
     };

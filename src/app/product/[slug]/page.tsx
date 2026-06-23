@@ -163,8 +163,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 leading-relaxed mb-8">
-                Experience premium quality with this meticulously crafted {product.category.toLowerCase()}. Designed for durability and styled for modern aesthetics, it's the perfect addition to your daily routine. Features include high-grade materials, ergonomic design, and an industry-leading warranty.
+              <p className="text-gray-600 leading-relaxed mb-8 whitespace-pre-wrap">
+                {product.description || `Experience premium quality with this meticulously crafted ${product.category?.toLowerCase() || 'product'}. Designed for durability and styled for modern aesthetics, it's the perfect addition to your daily routine. Features include high-grade materials, ergonomic design, and an industry-leading warranty.`}
               </p>
 
               <hr className="border-gray-100 mb-8" />

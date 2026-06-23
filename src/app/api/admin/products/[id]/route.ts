@@ -9,7 +9,7 @@ import { auth } from '@/auth';
 
 async function requireAuth() {
   const session = await auth();
-  if (!session?.user) {
+  if (!session?.user || session.user.email !== "mohammadbitullah3@gmail.com") {
     throw new Error('Unauthorized');
   }
   return session.user;
@@ -31,6 +31,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (body.totalStock !== undefined) updateData.totalStock = body.totalStock ? parseInt(body.totalStock) : 0;
     if (body.image !== undefined) updateData.image = body.image;
     if (body.vendor !== undefined) updateData.vendor = body.vendor;
+    if (body.description !== undefined) updateData.description = body.description;
     if (body.featured !== undefined) updateData.featured = body.featured === true;
     updateData.updatedAt = new Date();
 
