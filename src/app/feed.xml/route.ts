@@ -12,7 +12,7 @@ export async function GET() {
     .orderBy(desc(posts.publishedAt))
     .limit(20);
 
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'; // Replace with production URL later
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.shop.nexuscalculator.net';
 
   const feedItems = publishedPosts.map(post => {
     return `
