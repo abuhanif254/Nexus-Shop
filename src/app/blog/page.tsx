@@ -3,8 +3,15 @@ import { posts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import Image from "next/image";
+import { Clock } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
+
+function getReadingTime(content: string) {
+  const text = content.replace(/<[^>]*>?/gm, '');
+  const wordCount = text.split(/\s+/).length;
+  return Math.max(1, Math.ceil(wordCount / 200));
+}
 
 export default async function BlogIndexPage() {
   const publishedPosts = await db.select()
@@ -84,10 +91,16 @@ export default async function BlogIndexPage() {
                     </div>
                   </Link>
                   <div className="p-8 md:p-10 w-full md:w-1/2 flex flex-col justify-center">
-                    <p className="text-sm font-semibold text-brand-orange mb-3 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-brand-orange animate-pulse" />
-                      {publishedPosts[0].publishedAt ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(publishedPosts[0].publishedAt)) : 'Recent'}
-                    </p>
+                    <div className="flex items-center gap-4 text-sm font-semibold text-brand-orange mb-4">
+                      <p className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-brand-orange animate-pulse" />
+                        {publishedPosts[0].publishedAt ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(publishedPosts[0].publishedAt)) : 'Recent'}
+                      </p>
+                      <span className="text-gray-300">•</span>
+                      <p className="flex items-center gap-1.5 text-gray-500">
+                        <Clock size={14} /> {getReadingTime(publishedPosts[0].content)} min read
+                      </p>
+                    </div>
                     <Link href={`/blog/${publishedPosts[0].slug}`} className="block mb-4">
                       <h3 className="text-2xl md:text-3xl font-black text-gray-900 line-clamp-3 group-hover:text-brand-orange transition-colors leading-tight">
                         {publishedPosts[0].title}
@@ -122,9 +135,14 @@ export default async function BlogIndexPage() {
                   </Link>
                   <div className="p-6 md:p-8 flex-1 flex flex-col">
                     <div className="flex-1">
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                        {post.publishedAt ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(post.publishedAt)) : ''}
-                      </p>
+                      <div className="flex items-center justify-between mb-3 text-xs font-semibold uppercase tracking-wider">
+                        <p className="text-gray-400">
+                          {post.publishedAt ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(post.publishedAt)) : ''}
+                        </p>
+                        <p className="text-gray-400 flex items-center gap-1">
+                          <Clock size={12} /> {getReadingTime(post.content)} min read
+                        </p>
+                      </div>
                       <Link href={`/blog/${post.slug}`} className="block mb-3">
                         <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-brand-orange transition-colors">
                           {post.title}
