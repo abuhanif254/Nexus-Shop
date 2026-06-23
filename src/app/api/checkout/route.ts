@@ -22,11 +22,12 @@ export async function POST(req: Request) {
     }
 
     // --- INVENTORY CHECK ---
-    const productIds = items.map((i: any) => i.id.toString());
+    const productIds = items.map((i: any) => i.id.toString().split('-')[0]);
     const dbProducts = await db.select().from(products).where(inArray(products.id, productIds));
     
     for (const item of items) {
-      const dbProduct = dbProducts.find(p => p.id === item.id.toString());
+      const baseProductId = item.id.toString().split('-')[0];
+      const dbProduct = dbProducts.find(p => p.id === baseProductId);
       if (!dbProduct) {
         return NextResponse.json({ error: `Product not found: ${item.title}` }, { status: 400 });
       }
@@ -84,10 +85,11 @@ export async function POST(req: Request) {
       });
 
       // Decrement stock
-      const dbProduct = dbProducts.find(p => p.id === item.id.toString())!;
+      const baseProductId = item.id.toString().split('-')[0];
+      const dbProduct = dbProducts.find(p => p.id === baseProductId)!;
       await db.update(products)
         .set({ totalStock: dbProduct.totalStock - item.quantity })
-        .where(eq(products.id, item.id.toString()));
+        .where(eq(products.id, baseProductId));
     }
 
     // If Payment Method is Credit Card (Stripe), we create a Checkout Session and return the URL.
