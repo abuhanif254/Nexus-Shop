@@ -10,8 +10,9 @@ import { ArrowLeft } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const data = await db.select().from(posts).where(eq(posts.slug, params.slug)).limit(1);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const data = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
   if (!data.length) return { title: 'Not Found' };
   
   return {
@@ -20,8 +21,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const data = await db.select().from(posts).where(eq(posts.slug, params.slug)).limit(1);
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const data = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
   
   if (!data.length || !data[0].isPublished) {
     notFound();

@@ -5,9 +5,9 @@ import { eq } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const data = await db.select().from(posts).where(eq(posts.id, id));
     if (data.length === 0) {
       return NextResponse.json({ success: false, error: "Post not found" }, { status: 404 });
@@ -18,9 +18,9 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
     const { title, slug, content, excerpt, featuredImage, isPublished } = body;
 
@@ -57,9 +57,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     await db.delete(posts).where(eq(posts.id, id));
     return NextResponse.json({ success: true });
   } catch (error) {

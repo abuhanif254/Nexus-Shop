@@ -7,8 +7,8 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import OrderActions from "@/components/admin/OrderActions";
 
-export default async function AdminOrderDetailsPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function AdminOrderDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   // Fetch the order
   const orderRes = await db.select().from(orders).where(eq(orders.id, id));
