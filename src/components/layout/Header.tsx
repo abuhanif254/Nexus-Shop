@@ -145,7 +145,7 @@ export default function Header() {
               <div className="flex items-center gap-1 cursor-pointer hover:text-brand-orange">
                 Recent Viewed <ChevronDown size={12} />
               </div>
-              <Link href="/account/orders" className="flex items-center gap-1 hover:text-brand-orange"><Truck size={14} /> Order Tracking</Link>
+              <Link href="/track-order" className="flex items-center gap-1 hover:text-brand-orange"><Truck size={14} /> Order Tracking</Link>
               {status === 'loading' ? (
                 <div className="w-24 h-4 bg-gray-200 animate-pulse rounded"></div>
               ) : session ? (
