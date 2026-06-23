@@ -68,12 +68,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Trust & Benefits */}
-      <section className="container mx-auto px-4 max-w-[1400px] py-8 md:py-12 border-t border-gray-100">
-        <FadeIn delay={200}>
-          <TrustBenefits />
-        </FadeIn>
-      </section>
 
       {/* Lightning Deals Section */}
       <section className="container mx-auto px-4 max-w-[1400px] py-8 md:py-12 border-t border-gray-100">
@@ -113,6 +107,13 @@ export default async function Home() {
       <FadeIn delay={200}>
         <BrandMarquee />
       </FadeIn>
+
+      {/* Trust & Benefits */}
+      <section className="container mx-auto px-4 max-w-[1400px] py-8 md:py-12 border-t border-gray-100">
+        <FadeIn delay={200}>
+          <TrustBenefits />
+        </FadeIn>
+      </section>
 
       {/* Newsletter */}
       <section className="container mx-auto px-4 max-w-[1400px] py-12 md:py-20">
