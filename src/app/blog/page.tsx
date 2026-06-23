@@ -3,7 +3,8 @@ import { posts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Mail } from "lucide-react";
+import { Clock } from "lucide-react";
+import BlogSidebar from "@/components/blog/BlogSidebar";
 
 export const dynamic = 'force-dynamic';
 
@@ -45,144 +46,111 @@ export default async function BlogIndexPage() {
 
       <main className="flex-1 bg-gray-50 py-16 -mt-8 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* CATEGORY NAVIGATION (Step 3) */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
-            {['All', 'Technology', 'Fashion', 'Tips & Tricks', 'Industry News'].map((category) => (
-              <Link 
-                key={category}
-                href={category === 'All' ? '/blog' : `/blog?category=${encodeURIComponent(category)}`}
-                className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
-                  category === 'All' 
-                    ? 'bg-brand-dark text-white shadow-md' 
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-brand-orange hover:text-brand-orange'
-                }`}
-              >
-                {category}
-              </Link>
-            ))}
-          </div>
-
-          {publishedPosts.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No posts yet</h3>
-              <p className="text-gray-500">Check back later for exciting new content!</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* FEATURED POST (Step 2) */}
-              {publishedPosts.length > 0 && (
-                <article className="md:col-span-2 lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row group">
-                  <Link href={`/blog/${publishedPosts[0].slug}`} className="block relative w-full md:w-1/2 aspect-video md:aspect-auto bg-gray-100 overflow-hidden">
-                    {publishedPosts[0].featuredImage ? (
-                      <Image 
-                        src={publishedPosts[0].featuredImage} 
-                        alt={publishedPosts[0].title} 
-                        fill 
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                        <span className="font-semibold text-2xl text-brand-orange">{publishedPosts[0].title.charAt(0)}</span>
-                      </div>
-                    )}
-                    <div className="absolute top-4 left-4 bg-brand-orange text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-                      Featured
-                    </div>
-                  </Link>
-                  <div className="p-8 md:p-10 w-full md:w-1/2 flex flex-col justify-center">
-                    <div className="flex items-center gap-4 text-sm font-semibold text-brand-orange mb-4">
-                      <p className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-brand-orange animate-pulse" />
-                        {publishedPosts[0].publishedAt ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(publishedPosts[0].publishedAt)) : 'Recent'}
-                      </p>
-                      <span className="text-gray-300">•</span>
-                      <p className="flex items-center gap-1.5 text-gray-500">
-                        <Clock size={14} /> {getReadingTime(publishedPosts[0].content)} min read
-                      </p>
-                    </div>
-                    <Link href={`/blog/${publishedPosts[0].slug}`} className="block mb-4">
-                      <h3 className="text-2xl md:text-3xl font-black text-gray-900 line-clamp-3 group-hover:text-brand-orange transition-colors leading-tight">
-                        {publishedPosts[0].title}
-                      </h3>
-                    </Link>
-                    <p className="text-base text-gray-500 line-clamp-3 mb-8 leading-relaxed">
-                      {publishedPosts[0].excerpt || publishedPosts[0].content.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...'}
-                    </p>
-                    <Link href={`/blog/${publishedPosts[0].slug}`} className="inline-flex items-center text-brand-dark font-bold hover:text-brand-orange transition-colors group/link">
-                      Read the full story <span className="ml-2 group-hover/link:translate-x-1 transition-transform">&rarr;</span>
-                    </Link>
-                  </div>
-                </article>
-              )}
-
-              {/* REGULAR POSTS */}
-              {publishedPosts.slice(1).map((post) => (
-                <article key={post.id} className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col group">
-                  <Link href={`/blog/${post.slug}`} className="block relative aspect-[16/10] bg-gray-100 overflow-hidden">
-                    {post.featuredImage ? (
-                      <Image 
-                        src={post.featuredImage} 
-                        alt={post.title} 
-                        fill 
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                        <span className="font-semibold text-xl text-brand-orange">{post.title.charAt(0)}</span>
-                      </div>
-                    )}
-                  </Link>
-                  <div className="p-6 md:p-8 flex-1 flex flex-col">
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-3 text-xs font-semibold uppercase tracking-wider">
-                        <p className="text-gray-400">
-                          {post.publishedAt ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(post.publishedAt)) : ''}
-                        </p>
-                        <p className="text-gray-400 flex items-center gap-1">
-                          <Clock size={12} /> {getReadingTime(post.content)} min read
-                        </p>
-                      </div>
-                      <Link href={`/blog/${post.slug}`} className="block mb-3">
-                        <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-brand-orange transition-colors">
-                          {post.title}
-                        </h3>
-                      </Link>
-                      <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
-                        {post.excerpt || post.content.replace(/<[^>]*>?/gm, '').substring(0, 120) + '...'}
-                      </p>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-
-          {/* Step 10: Newsletter CTA (Feed) */}
-          <div className="mt-20 bg-brand-dark rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange opacity-20 blur-[100px] rounded-full"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500 opacity-20 blur-[100px] rounded-full"></div>
+          
+          <div className="flex flex-col lg:flex-row gap-12">
             
-            <div className="relative z-10 max-w-2xl mx-auto">
-              <Mail className="w-12 h-12 text-brand-orange mx-auto mb-6" />
-              <h3 className="text-3xl font-black text-white mb-4">Subscribe to The Nexus Journal</h3>
-              <p className="text-gray-300 mb-8 text-lg">
-                Get the latest articles, industry insights, and exclusive content delivered straight to your inbox.
-              </p>
-              <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input 
-                  type="email" 
-                  placeholder="Your email address" 
-                  className="flex-1 px-6 py-4 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-orange"
-                  required
-                />
-                <button type="submit" className="px-8 py-4 bg-brand-orange text-white font-bold rounded-xl hover:bg-orange-600 transition-colors shadow-lg">
-                  Subscribe
-                </button>
-              </form>
-            </div>
-          </div>
+            {/* LEFT COLUMN: MAIN CONTENT (70%) */}
+            <div className="w-full lg:w-[70%]">
+              {publishedPosts.length === 0 ? (
+                <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No posts yet</h3>
+                  <p className="text-gray-500">Check back later for exciting new content!</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* FEATURED POST */}
+                  {publishedPosts.length > 0 && (
+                    <article className="md:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row group">
+                      <Link href={`/blog/${publishedPosts[0].slug}`} className="block relative w-full md:w-1/2 aspect-video md:aspect-auto bg-gray-100 overflow-hidden">
+                        {publishedPosts[0].featuredImage ? (
+                          <Image 
+                            src={publishedPosts[0].featuredImage} 
+                            alt={publishedPosts[0].title} 
+                            fill 
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                            <span className="font-semibold text-2xl text-brand-orange">{publishedPosts[0].title.charAt(0)}</span>
+                          </div>
+                        )}
+                        <div className="absolute top-4 left-4 bg-brand-orange text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                          Featured
+                        </div>
+                      </Link>
+                      <div className="p-8 w-full md:w-1/2 flex flex-col justify-center">
+                        <div className="flex items-center gap-4 text-sm font-semibold text-brand-orange mb-4">
+                          <p className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-brand-orange animate-pulse" />
+                            {publishedPosts[0].publishedAt ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(publishedPosts[0].publishedAt)) : 'Recent'}
+                          </p>
+                          <span className="text-gray-300">•</span>
+                          <p className="flex items-center gap-1.5 text-gray-500">
+                            <Clock size={14} /> {getReadingTime(publishedPosts[0].content)} min read
+                          </p>
+                        </div>
+                        <Link href={`/blog/${publishedPosts[0].slug}`} className="block mb-4">
+                          <h3 className="text-2xl md:text-3xl font-black text-gray-900 line-clamp-3 group-hover:text-brand-orange transition-colors leading-tight">
+                            {publishedPosts[0].title}
+                          </h3>
+                        </Link>
+                        <p className="text-base text-gray-500 line-clamp-3 mb-8 leading-relaxed">
+                          {publishedPosts[0].excerpt || publishedPosts[0].content.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...'}
+                        </p>
+                        <Link href={`/blog/${publishedPosts[0].slug}`} className="inline-flex items-center text-brand-dark font-bold hover:text-brand-orange transition-colors group/link">
+                          Read the full story <span className="ml-2 group-hover/link:translate-x-1 transition-transform">&rarr;</span>
+                        </Link>
+                      </div>
+                    </article>
+                  )}
 
+                  {/* REGULAR POSTS */}
+                  {publishedPosts.slice(1).map((post) => (
+                    <article key={post.id} className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col group">
+                      <Link href={`/blog/${post.slug}`} className="block relative aspect-[16/10] bg-gray-100 overflow-hidden">
+                        {post.featuredImage ? (
+                          <Image 
+                            src={post.featuredImage} 
+                            alt={post.title} 
+                            fill 
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                            <span className="font-semibold text-xl text-brand-orange">{post.title.charAt(0)}</span>
+                          </div>
+                        )}
+                      </Link>
+                      <div className="p-6 md:p-8 flex-1 flex flex-col">
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-3 text-xs font-semibold uppercase tracking-wider">
+                            <p className="text-gray-400">
+                              {post.publishedAt ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(post.publishedAt)) : ''}
+                            </p>
+                            <p className="text-gray-400 flex items-center gap-1">
+                              <Clock size={12} /> {getReadingTime(post.content)} min read
+                            </p>
+                          </div>
+                          <Link href={`/blog/${post.slug}`} className="block mb-3">
+                            <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-brand-orange transition-colors">
+                              {post.title}
+                            </h3>
+                          </Link>
+                          <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
+                            {post.excerpt || post.content.replace(/<[^>]*>?/gm, '').substring(0, 120) + '...'}
+                          </p>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* RIGHT COLUMN: SIDEBAR (30%) */}
+            <BlogSidebar />
+
+          </div>
         </div>
       </main>
     </div>
