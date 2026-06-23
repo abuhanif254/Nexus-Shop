@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, ShoppingBag, Users, Settings, PackageOpen, Box } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, Users, Settings, PackageOpen, Box, ImageIcon, Tags, Award, TicketPercent, MessageSquare, FileText } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export default function AdminSidebar() {
@@ -11,7 +11,13 @@ export default function AdminSidebar() {
     { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/admin/orders", icon: ShoppingBag, label: "Orders" },
     { href: "/admin/products", icon: Box, label: "Products" },
+    { href: "/admin/categories", icon: Tags, label: "Categories" },
+    { href: "/admin/brands", icon: Award, label: "Brands" },
+    { href: "/admin/banners", icon: ImageIcon, label: "Banners" },
+    { href: "/admin/discounts", icon: TicketPercent, label: "Discounts" },
     { href: "/admin/customers", icon: Users, label: "Customers" },
+    { href: "/admin/reviews", icon: MessageSquare, label: "Reviews" },
+    { href: "/admin/blog", icon: FileText, label: "Blog" },
     { href: "/admin/settings", icon: Settings, label: "Settings" },
   ];
 

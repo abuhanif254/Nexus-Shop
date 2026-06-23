@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { products } from "@/db/schema";
-import { like, or, and, gte, lte, eq, desc, asc, SQL } from "drizzle-orm";
+import { like, or, and, gte, lte, gt, eq, desc, asc, SQL, sql } from "drizzle-orm";
 
 export async function GET(req: Request) {
   try {
@@ -13,6 +13,12 @@ export async function GET(req: Request) {
     const category = searchParams.get('category');
     const rating = searchParams.get('rating');
     const sort = searchParams.get('sort');
+    const inStock = searchParams.get('inStock');
+    
+    // Pagination parameters
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '12');
+    const offset = (page - 1) * limit;
 
     const conditions: SQL[] = [];
 
@@ -32,7 +38,18 @@ export async function GET(req: Request) {
     if (brand) conditions.push(eq(products.brand, brand));
     if (category) conditions.push(eq(products.category, category));
     if (rating) conditions.push(gte(products.rating, parseFloat(rating)));
+    if (inStock === 'true') conditions.push(gt(products.totalStock, 0));
 
+    // 1. Get total count for pagination
+    let countQueryBuilder: any = db.select({ count: sql<number>`count(*)` }).from(products);
+    if (conditions.length > 0) {
+      countQueryBuilder = countQueryBuilder.where(and(...conditions));
+    }
+    const countResult = await countQueryBuilder;
+    const total = Number(countResult[0].count);
+    const totalPages = Math.ceil(total / limit);
+
+    // 2. Get paginated results
     let queryBuilder: any = db.select().from(products);
     
     if (conditions.length > 0) {
@@ -49,10 +66,16 @@ export async function GET(req: Request) {
       queryBuilder = queryBuilder.orderBy(desc(products.soldCount));
     }
 
+    queryBuilder = queryBuilder.limit(limit).offset(offset);
+
     const results = await queryBuilder;
 
-    // Return both 'results' (for backwards autocomplete) and 'data' (for ProductGrid)
-    return NextResponse.json({ success: true, data: results, results });
+    return NextResponse.json({ 
+      success: true, 
+      data: results, 
+      results, // kept for backwards compatibility with header search
+      pagination: { total, page, limit, totalPages }
+    });
   } catch (error) {
     console.error("Search API Error:", error);
     return NextResponse.json({ success: false, error: "Failed to search products" }, { status: 500 });

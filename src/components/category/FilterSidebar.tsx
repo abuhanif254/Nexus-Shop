@@ -12,6 +12,7 @@ export default function FilterSidebar() {
 
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     categories: true,
+    availability: true,
     price: true,
     brands: true,
     rating: true,
@@ -27,6 +28,7 @@ export default function FilterSidebar() {
   const currentBrand = searchParams.get('brand');
   const currentCategory = searchParams.get('category');
   const currentRating = searchParams.get('rating');
+  const currentInStock = searchParams.get('inStock') === 'true';
 
   const updateFilters = useCallback((key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -55,7 +57,7 @@ export default function FilterSidebar() {
     router.push(pathname, { scroll: false });
   }, [router, pathname]);
 
-  const hasActiveFilters = currentBrand || currentCategory || currentRating || searchParams.get('minPrice') || searchParams.get('maxPrice');
+  const hasActiveFilters = currentBrand || currentCategory || currentRating || searchParams.get('minPrice') || searchParams.get('maxPrice') || currentInStock;
 
   return (
     <div className="bg-white dark:bg-brand-dark rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm sticky top-24 overflow-hidden">
@@ -101,6 +103,12 @@ export default function FilterSidebar() {
                   <button onClick={() => updateFilters('rating', null)} className="hover:text-brand-orange"><X size={12} /></button>
                 </span>
               )}
+              {currentInStock && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  In Stock Only
+                  <button onClick={() => updateFilters('inStock', null)} className="hover:text-brand-orange"><X size={12} /></button>
+                </span>
+              )}
             </div>
           </motion.div>
         )}
@@ -127,6 +135,30 @@ export default function FilterSidebar() {
                     <span className={`text-sm transition-colors ${currentCategory === cat ? 'text-brand-orange font-semibold' : 'text-gray-600 dark:text-gray-400 group-hover:text-brand-orange'}`}>{cat}</span>
                   </label>
                 ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Availability Filter */}
+        <div className="p-4">
+          <button 
+            className="flex justify-between items-center w-full font-semibold text-sm text-gray-800 dark:text-gray-200 mb-3"
+            onClick={() => toggleSection('availability')}
+          >
+            Availability {expandedSections.availability ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          <AnimatePresence>
+            {expandedSections.availability && (
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-2 mt-2 overflow-hidden">
+                <label className="flex items-center gap-2 cursor-pointer group" onClick={() => updateFilters('inStock', currentInStock ? null : 'true')}>
+                  <div className={`w-4 h-4 border rounded flex items-center justify-center transition-colors ${currentInStock ? 'bg-brand-orange border-brand-orange text-white' : 'border-gray-300 dark:border-gray-600 group-hover:border-brand-orange'}`}>
+                    {currentInStock && <Check size={12} />}
+                  </div>
+                  <span className={`text-sm transition-colors ${currentInStock ? 'text-brand-orange font-semibold' : 'text-gray-600 dark:text-gray-400 group-hover:text-brand-orange'}`}>
+                    In Stock Only
+                  </span>
+                </label>
               </motion.div>
             )}
           </AnimatePresence>

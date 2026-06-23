@@ -5,6 +5,7 @@ import MobileFilterWrapper from "@/components/category/MobileFilterWrapper";
 import CategoryPills from "@/components/category/CategoryPills";
 import SortBar from "@/components/category/SortBar";
 import ProductGrid from "@/components/category/ProductGrid";
+import ShopHeroBanner from "@/components/shop/ShopHeroBanner";
 import type { Metadata } from "next";
 
 export const revalidate = 3600; // Cache for 1 hour
@@ -47,10 +48,13 @@ export default function ShopPage() {
           <span className="text-gray-400 capitalize">Shop</span>
         </nav>
 
-        {/* Page Header */}
-        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-8 flex justify-between items-end">
+        {/* Hero Banner */}
+        <ShopHeroBanner />
+
+        {/* Page Header (Optional now since we have the banner, but let's keep it minimal if needed, actually let's remove it and let the banner take over) */}
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm mb-6 flex justify-between items-end">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800 capitalize mb-2">{titleName}</h1>
+            <h1 className="text-2xl font-bold text-gray-800 capitalize mb-1">{titleName}</h1>
             <p className="text-gray-500 text-sm">Showing all available products in our store</p>
           </div>
         </div>

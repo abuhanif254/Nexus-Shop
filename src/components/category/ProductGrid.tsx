@@ -22,22 +22,31 @@ interface Product {
   featured?: boolean;
 }
 
+interface PaginationInfo {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export default function ProductGrid({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const [products, setProducts] = useState<Product[]>([]);
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      setPage(1);
+      setCurrentPage(1);
       try {
-        // Construct API URL with current search params
         const params = new URLSearchParams(searchParams.toString());
+        params.set('page', '1');
+        
         const apiEndpoint = slug === 'search' 
           ? `/api/search?${params.toString()}` 
           : `/api/category/${slug}?${params.toString()}`;
@@ -47,9 +56,10 @@ export default function ProductGrid({ slug }: { slug: string }) {
         
         if (result.success) {
           setProducts(result.data);
+          setPagination(result.pagination);
         }
       } catch (error) {
-        console.error("Failed to fetch category products:", error);
+        console.error("Failed to fetch products:", error);
       } finally {
         setLoading(false);
       }
@@ -89,10 +99,15 @@ export default function ProductGrid({ slug }: { slug: string }) {
   }
 
   const handleLoadMore = async () => {
+    if (!pagination || currentPage >= pagination.totalPages) return;
+    
     setLoadingMore(true);
+    const nextPage = currentPage + 1;
+    
     try {
-      // Simulate fetching next page
       const params = new URLSearchParams(searchParams.toString());
+      params.set('page', String(nextPage));
+      
       const apiEndpoint = slug === 'search' 
           ? `/api/search?${params.toString()}` 
           : `/api/category/${slug}?${params.toString()}`;
@@ -101,13 +116,9 @@ export default function ProductGrid({ slug }: { slug: string }) {
       const result = await res.json();
       
       if (result.success) {
-        // Mocking appending new items by duplicating for demo purposes
-        const newItems = result.data.map((item: Product) => ({
-          ...item,
-          id: item.id + Math.random() * 10000 // Ensure unique keys
-        }));
-        setProducts(prev => [...prev, ...newItems]);
-        setPage(p => p + 1);
+        setProducts(prev => [...prev, ...result.data]);
+        setPagination(result.pagination);
+        setCurrentPage(nextPage);
       }
     } catch (error) {
       console.error("Failed to load more products:", error);
@@ -116,18 +127,26 @@ export default function ProductGrid({ slug }: { slug: string }) {
     }
   };
 
+  const currentView = searchParams.get('view') || 'grid';
+
   return (
-    <div className="flex flex-col items-center">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full mb-8">
+    <div className="flex flex-col items-center w-full">
+      <div className="flex justify-between items-center w-full mb-4 px-2">
+        <p className="text-sm text-gray-500 font-semibold">
+          Showing <span className="text-brand-orange">{products.length}</span> of {pagination?.total || products.length} results
+        </p>
+      </div>
+      
+      <div className={`w-full mb-8 ${currentView === 'list' ? 'flex flex-col gap-4' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'}`}>
         {products.map((product) => (
-          <ProductCard key={product.id} {...product} />
+          <ProductCard key={product.id} {...product} viewMode={currentView as 'grid' | 'list'} />
         ))}
         {loadingMore && [1, 2, 3, 4].map((i) => (
           <ProductCardSkeleton key={`skeleton-more-${i}`} />
         ))}
       </div>
       
-      {page < 3 && (
+      {pagination && currentPage < pagination.totalPages && (
         <button 
           onClick={handleLoadMore}
           disabled={loadingMore}

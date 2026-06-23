@@ -82,7 +82,9 @@ export default async function AdminOrdersPage() {
               {allOrders.map(({ order, userName, userEmail }) => (
                 <tr key={order.id} className="hover:bg-gray-50 transition-colors">
                   <td className="p-4">
-                    <span className="font-mono text-sm font-medium text-brand-dark">#{order.id.split('-')[0].toUpperCase()}</span>
+                    <Link href={`/admin/orders/${order.id}`} className="font-mono text-sm font-medium text-brand-dark hover:text-brand-orange hover:underline">
+                      #{order.id.split('-')[0].toUpperCase()}
+                    </Link>
                   </td>
                   <td className="p-4 text-sm text-gray-600">
                     {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(order.createdAt))}

@@ -23,6 +23,7 @@ interface ProductCardProps {
   vendor: string;
   soldCount: number;
   totalStock: number;
+  viewMode?: 'grid' | 'list';
 }
 
 export default function ProductCard({
@@ -39,6 +40,7 @@ export default function ProductCard({
   vendor,
   soldCount,
   totalStock,
+  viewMode = 'grid',
 }: ProductCardProps) {
   const { addItemToCart, toggleWishlist, wishlist } = useCartStore();
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
@@ -63,9 +65,9 @@ export default function ProductCard({
 
   return (
     <motion.div 
-      whileHover={{ y: -4 }}
+      whileHover={viewMode === 'grid' ? { y: -4 } : { x: 4 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className="bg-white dark:bg-[#111111] border border-gray-100 dark:border-gray-800 rounded-2xl p-3 md:p-4 relative group shadow-sm hover:shadow-premium transition-all duration-300"
+      className={`bg-white dark:bg-[#111111] border border-gray-100 dark:border-gray-800 rounded-2xl p-3 md:p-4 relative group shadow-sm hover:shadow-premium transition-all duration-300 ${viewMode === 'list' ? 'flex flex-col sm:flex-row gap-6 items-center' : ''}`}
     >
       {/* Badges */}
       <div className="flex gap-2 absolute top-5 left-5 z-20">
@@ -85,7 +87,7 @@ export default function ProductCard({
       </div>
 
       {/* Image Container with Hover Actions */}
-      <div className="relative mb-4 group/image">
+      <div className={`relative ${viewMode === 'grid' ? 'mb-4' : 'w-full sm:w-64 shrink-0'} group/image`}>
         <Link href={`/product/${title.toLowerCase().replace(/ /g, '-')}`} className="block relative aspect-square overflow-hidden rounded-xl bg-[#F8F9FA] dark:bg-[#151515]">
           {image ? (
             <Image 
@@ -137,7 +139,7 @@ export default function ProductCard({
       </div>
 
       {/* Details */}
-      <div className="space-y-1.5 px-1">
+      <div className={`space-y-1.5 px-1 ${viewMode === 'list' ? 'flex-1 py-2 w-full' : ''}`}>
         <p className="text-[11px] font-bold text-brand-orange uppercase tracking-wider">{brand}</p>
         <Link href={`/product/${title.toLowerCase().replace(/ /g, '-')}`} className="block">
           <h4 className="text-sm md:text-base text-brand-dark dark:text-gray-200 font-bold hover:text-brand-orange transition-colors line-clamp-2 min-h-[44px] leading-snug">

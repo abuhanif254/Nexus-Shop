@@ -20,6 +20,64 @@ export const products = pgTable('products', {
   updatedAt: timestamp('updated_at', { mode: 'date' }),
 });
 
+export const banners = pgTable('banners', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  image: text('image').notNull(),
+  link: text('link').notNull(),
+  position: text('position').notNull(), // 'home', 'shop', etc.
+  order: integer('order').notNull().default(0),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull(),
+});
+
+export const categories = pgTable('categories', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  image: text('image'),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+});
+
+export const brands = pgTable('brands', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  logo: text('logo'),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+});
+
+export const storeSettings = pgTable('store_settings', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  storeName: text('store_name').notNull().default('My Store'),
+  contactEmail: text('contact_email').notNull().default('support@store.com'),
+  currency: text('currency').notNull().default('USD'),
+  taxRate: doublePrecision('tax_rate').notNull().default(0),
+  flatShippingFee: doublePrecision('flat_shipping_fee').notNull().default(0),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).notNull().defaultNow(),
+});
+
+export const coupons = pgTable('coupons', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  code: text('code').notNull().unique(),
+  discountPercentage: doublePrecision('discount_percentage').notNull(),
+  validUntil: timestamp('valid_until', { mode: 'date' }).notNull(),
+  usageLimit: integer('usage_limit').notNull().default(0), // 0 means unlimited
+  usedCount: integer('used_count').notNull().default(0),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+});
+
+export const posts = pgTable('posts', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  content: text('content').notNull(), // HTML string
+  excerpt: text('excerpt'),
+  featuredImage: text('featured_image'),
+  isPublished: boolean('is_published').default(false),
+  publishedAt: timestamp('published_at', { mode: 'date' }),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).notNull().defaultNow(),
+});
+
 export const shippingAddresses = pgTable('shipping_addresses', {
   id: text('id').primaryKey(),
   orderId: text('order_id').notNull().references(() => orders.id),

@@ -8,9 +8,9 @@ export default function SortBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-
+  
   const currentSort = searchParams.get('sort') || 'default';
+  const currentView = searchParams.get('view') || 'grid';
 
   const handleSortChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const sortValue = e.target.value;
@@ -25,20 +25,30 @@ export default function SortBar() {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [searchParams, pathname, router]);
 
+  const handleViewChange = useCallback((view: 'grid' | 'list') => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (view === 'grid') {
+      params.delete('view');
+    } else {
+      params.set('view', view);
+    }
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
   return (
     <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
       
       {/* View Toggles */}
       <div className="flex items-center gap-2">
         <button 
-          onClick={() => setViewMode('grid')}
-          className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-brand-orange text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
+          onClick={() => handleViewChange('grid')}
+          className={`p-2 rounded-lg transition-colors ${currentView === 'grid' ? 'bg-brand-orange text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
         >
           <LayoutGrid size={20} />
         </button>
         <button 
-          onClick={() => setViewMode('list')}
-          className={`p-2 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-brand-orange text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
+          onClick={() => handleViewChange('list')}
+          className={`p-2 rounded-lg transition-colors ${currentView === 'list' ? 'bg-brand-orange text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
         >
           <List size={20} />
         </button>
