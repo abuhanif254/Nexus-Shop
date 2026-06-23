@@ -13,13 +13,13 @@ export async function generateMetadata(
   const categoryTitle = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   return {
-    title: `${categoryTitle} Products | Besa Shop`,
-    description: `Browse our extensive collection of ${categoryTitle.toLowerCase()}. Find the best deals and premium quality products at Besa Shop.`,
+    title: `${categoryTitle} Products | Nexus Shop`,
+    description: `Browse our extensive collection of ${categoryTitle.toLowerCase()}. Find the best deals and premium quality products at Nexus Shop.`,
     openGraph: {
-      title: `${categoryTitle} | Besa Shop`,
-      description: `Browse our extensive collection of ${categoryTitle.toLowerCase()}.`,
-      url: `https://besa-ecommerce.com/category/${slug}`,
-      siteName: 'Besa Electronics',
+      title: `${categoryTitle} | Nexus Shop`,
+      description: `Browse our extensive collection of ${categoryTitle.toLowerCase()}. Find the best deals and premium quality products.`,
+      url: `https://www.saheragroup.com/category/${slug}`,
+      siteName: 'Nexus Shop',
       locale: 'en_US',
       type: 'website',
     },

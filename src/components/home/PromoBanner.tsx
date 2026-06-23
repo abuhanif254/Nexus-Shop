@@ -4,7 +4,7 @@ import { Sparkles, ArrowRight } from "lucide-react";
 export default function PromoBanner() {
   return (
     <div className="container mx-auto px-4 max-w-[1400px] py-8 md:py-12">
-      <div className="w-full relative overflow-hidden bg-gradient-to-r from-brand-orange to-orange-500 rounded-xl shadow-lg hover:shadow-xl transition-shadow group">
+      <div className="w-full relative overflow-hidden bg-brand-orange rounded-xl shadow-premium hover:shadow-premium-hover transition-shadow duration-300 group">
         
         {/* Abstract Background Shapes */}
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">

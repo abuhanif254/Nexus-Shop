@@ -25,24 +25,24 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://besa-ecommerce.com'),
+  metadataBase: new URL('https://saheragroup.com'),
   title: {
-    default: "Besa Shop | Premium Consumer Electronics & Lifestyle",
-    template: "%s | Besa Shop"
+    default: "Nexus Shop | Premium E-Commerce by Sahera Group",
+    template: "%s | Nexus Shop"
   },
-  description: "Discover the best premium consumer electronics, smart home devices, and lifestyle accessories. Enjoy fast shipping and secure checkout.",
+  description: "Discover the best products at Nexus Shop. A proud company of Sahera Group offering premium quality, fast shipping, and secure checkout.",
   openGraph: {
-    title: "Besa Shop | Premium Consumer Electronics",
-    description: "Discover the best premium consumer electronics, smart home devices, and lifestyle accessories. Enjoy fast shipping and secure checkout.",
-    url: "https://besa-ecommerce.com",
-    siteName: "Besa Shop",
+    title: "Nexus Shop | Premium E-Commerce by Sahera Group",
+    description: "Discover the best products at Nexus Shop. A proud company of Sahera Group.",
+    url: "https://www.saheragroup.com",
+    siteName: "Nexus Shop",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Besa Shop | Premium Consumer Electronics",
-    description: "Discover the best premium consumer electronics, smart home devices, and lifestyle accessories.",
+    title: "Nexus Shop | Premium E-Commerce by Sahera Group",
+    description: "Discover the best products at Nexus Shop. A proud company of Sahera Group.",
   },
 };
 
@@ -54,6 +54,30 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`antialiased pb-24 md:pb-0 ${outfit.variable} ${inter.variable} font-sans`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "Nexus Shop",
+              "image": "https://www.saheragroup.com/logo.png",
+              "@id": "https://www.saheragroup.com",
+              "url": "https://www.saheragroup.com",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "2300 Kishoreganj Sadar",
+                "addressLocality": "Dhaka",
+                "addressCountry": "BD"
+              },
+              "parentOrganization": {
+                "@type": "Organization",
+                "name": "Sahera Group",
+                "url": "https://www.saheragroup.com"
+              }
+            })
+          }}
+        />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <NextAuthProvider>
             <Header />

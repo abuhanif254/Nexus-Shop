@@ -2,7 +2,7 @@ export default function ProductCardSkeleton() {
   return (
     <div className="bg-white dark:bg-[#111111] border border-gray-100 dark:border-gray-800 rounded-xl p-4 md:p-5 relative flex flex-col h-full animate-pulse shadow-sm">
       {/* Image Skeleton */}
-      <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800/80 rounded-lg mb-4"></div>
+      <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800/80 rounded-xl mb-4"></div>
       
       {/* Details Skeleton */}
       <div className="space-y-3 flex-1">

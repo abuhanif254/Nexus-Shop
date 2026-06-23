@@ -192,32 +192,32 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-in fade-in slide-in-from-top-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide ml-1">Full Name</label>
-                    <input {...register("fullName")} type="text" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.fullName ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-200 dark:border-gray-800 focus:border-brand-orange focus:ring-brand-orange'} rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 transition-all text-gray-900 dark:text-white`} placeholder="John Doe" />
+                    <input {...register("fullName")} type="text" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.fullName ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-[#1A1A1A] focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20'} rounded-xl px-4 py-3.5 focus:outline-none transition-all text-gray-900 dark:text-white`} placeholder="John Doe" />
                     {errors.fullName && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.fullName.message}</p>}
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide ml-1">Email Address</label>
-                    <input {...register("email")} type="email" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.email ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-200 dark:border-gray-800 focus:border-brand-orange focus:ring-brand-orange'} rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 transition-all text-gray-900 dark:text-white`} placeholder="john@example.com" />
+                    <input {...register("email")} type="email" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.email ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-[#1A1A1A] focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20'} rounded-xl px-4 py-3.5 focus:outline-none transition-all text-gray-900 dark:text-white`} placeholder="john@example.com" />
                     {errors.email && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.email.message}</p>}
                   </div>
                   <div className="space-y-1.5 md:col-span-2">
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide ml-1">Phone Number</label>
-                    <input {...register("phone")} type="tel" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.phone ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-200 dark:border-gray-800 focus:border-brand-orange focus:ring-brand-orange'} rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 transition-all text-gray-900 dark:text-white`} placeholder="+1 (555) 000-0000" />
+                    <input {...register("phone")} type="tel" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.phone ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-[#1A1A1A] focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20'} rounded-xl px-4 py-3.5 focus:outline-none transition-all text-gray-900 dark:text-white`} placeholder="+1 (555) 000-0000" />
                     {errors.phone && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.phone.message}</p>}
                   </div>
                   <div className="space-y-1.5 md:col-span-2">
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide ml-1">Address Line 1</label>
-                    <input {...register("addressLine1")} type="text" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.addressLine1 ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-200 dark:border-gray-800 focus:border-brand-orange focus:ring-brand-orange'} rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 transition-all text-gray-900 dark:text-white`} placeholder="123 Commerce St" />
+                    <input {...register("addressLine1")} type="text" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.addressLine1 ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-[#1A1A1A] focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20'} rounded-xl px-4 py-3.5 focus:outline-none transition-all text-gray-900 dark:text-white`} placeholder="123 Commerce St" />
                     {errors.addressLine1 && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.addressLine1.message}</p>}
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide ml-1">City</label>
-                    <input {...register("city")} type="text" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.city ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-200 dark:border-gray-800 focus:border-brand-orange focus:ring-brand-orange'} rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 transition-all text-gray-900 dark:text-white`} placeholder="New York" />
+                    <input {...register("city")} type="text" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.city ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-[#1A1A1A] focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20'} rounded-xl px-4 py-3.5 focus:outline-none transition-all text-gray-900 dark:text-white`} placeholder="New York" />
                     {errors.city && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.city.message}</p>}
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide ml-1">Postal Code</label>
-                    <input {...register("postalCode")} type="text" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.postalCode ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-200 dark:border-gray-800 focus:border-brand-orange focus:ring-brand-orange'} rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 transition-all text-gray-900 dark:text-white`} placeholder="10001" />
+                    <input {...register("postalCode")} type="text" className={`w-full bg-gray-50 dark:bg-[#111111] border ${errors.postalCode ? 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-[#1A1A1A] focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20'} rounded-xl px-4 py-3.5 focus:outline-none transition-all text-gray-900 dark:text-white`} placeholder="10001" />
                     {errors.postalCode && <p className="text-red-500 text-xs mt-1 ml-1 font-medium">{errors.postalCode.message}</p>}
                   </div>
                   
@@ -348,7 +348,7 @@ export default function CheckoutPage() {
               <button 
                 onClick={handleSubmit(onSubmit)}
                 disabled={step === 1}
-                className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg text-lg ${step === 1 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed shadow-none' : 'bg-brand-orange text-white hover:bg-orange-600 shadow-[0_10px_40px_rgba(249,78,48,0.3)] active:scale-95'}`}
+                className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-lg ${step === 1 ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed' : 'bg-brand-orange text-white hover:bg-orange-600 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 active:scale-95'}`}
               >
                 Place Order Now
               </button>

@@ -23,8 +23,8 @@ export default function CheckoutSuccessPage() {
           <CheckCircle2 size={40} />
         </div>
         <h1 className="text-3xl font-black text-gray-900 mb-2">Order Confirmed!</h1>
-        <p className="text-gray-500 mb-8">
-          Thank you for shopping with Besa. Your order has been securely received and is now being processed.
+        <p className="text-gray-500 mb-8 max-w-sm mx-auto leading-relaxed">
+          Thank you for shopping with Nexus Shop. Your order has been securely received and is now being processed.
         </p>
         
         <div className="bg-gray-50 rounded-2xl p-6 text-left mb-8 border border-gray-100">

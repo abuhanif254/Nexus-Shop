@@ -22,20 +22,20 @@ export default async function Home() {
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Besa E-Commerce',
-      url: 'https://besa-ecommerce.com',
+      name: 'Nexus Shop',
+      url: 'https://www.saheragroup.com',
       potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://besa-ecommerce.com/search?q={search_term_string}',
+        target: 'https://www.saheragroup.com/search?q={search_term_string}',
         'query-input': 'required name=search_term_string',
       },
     },
     {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Besa E-Commerce',
-      url: 'https://besa-ecommerce.com',
-      logo: 'https://besa-ecommerce.com/logo.png',
+      name: 'Nexus Shop',
+      url: 'https://www.saheragroup.com',
+      logo: 'https://www.saheragroup.com/logo.png',
       contactPoint: {
         '@type': 'ContactPoint',
         telephone: '+1-800-555-0199',
@@ -43,9 +43,9 @@ export default async function Home() {
         availableLanguage: ['English', 'Spanish']
       },
       sameAs: [
-        'https://www.facebook.com/besaecommerce',
-        'https://twitter.com/besaecommerce',
-        'https://www.instagram.com/besaecommerce'
+        'https://facebook.com/saheragroup',
+        'https://twitter.com/saheragroup',
+        'https://instagram.com/saheragroup'
       ]
     }
   ];

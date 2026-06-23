@@ -192,10 +192,10 @@ export default function FilterSidebar() {
                   <button 
                     key={brand} 
                     onClick={() => updateFilters('brand', currentBrand === brand ? null : brand)}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
+                    className={`px-6 py-2 rounded-full text-sm font-bold transition-all border ${
                       currentBrand === brand 
                         ? 'bg-brand-dark dark:bg-white border-brand-dark dark:border-white text-white dark:text-brand-dark shadow-md' 
-                        : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-brand-orange hover:text-brand-orange'
+                        : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-brand-orange hover:text-brand-orange hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                   >
                     {brand}

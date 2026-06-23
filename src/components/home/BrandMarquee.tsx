@@ -20,10 +20,7 @@ export default function BrandMarquee() {
         <h3 className="text-center text-sm font-bold text-gray-400 uppercase tracking-widest">Trusted by Top Brands</h3>
       </div>
       
-      {/* Left and Right Gradients for smooth fade out */}
-      <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10"></div>
-      <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10"></div>
-
+      {/* Removed Gradient fades per user request */}
       <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
         {/* We duplicate the array 3 times to ensure infinite scroll fills the screen */}
         {[...brands, ...brands, ...brands].map((brand, i) => (

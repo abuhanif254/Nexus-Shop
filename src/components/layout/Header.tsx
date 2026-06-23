@@ -20,6 +20,7 @@ import {
 import { useCartStore } from '@/store/useCartStore';
 import { useSession, signOut } from 'next-auth/react';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
   if (!query) return <>{text}</>;
@@ -28,7 +29,7 @@ const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
     <>
       {parts.map((part, i) => 
         part.toLowerCase() === query.toLowerCase() 
-          ? <span key={i} className="bg-yellow-200 dark:bg-yellow-500/30 text-gray-900 dark:text-white px-0.5 rounded">{part}</span> 
+          ? <span key={i} className="bg-brand-orange/10 dark:bg-brand-orange/20 text-brand-orange px-1 rounded-sm font-bold">{part}</span> 
           : <span key={i}>{part}</span>
       )}
     </>
@@ -199,11 +200,11 @@ export default function Header() {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 text-2xl md:text-3xl font-bold text-brand-dark dark:text-white flex-1 lg:flex-none justify-center lg:justify-start">
-            <div className="bg-brand-orange text-white p-1 rounded-md">
-              <ShoppingCart size={24} className="md:w-7 md:h-7" />
+          <Link href="/" className={`flex items-center gap-2 font-bold text-brand-dark dark:text-white flex-1 lg:flex-none justify-center lg:justify-start transition-all duration-300 ${isScrolled ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
+            <div className={`bg-brand-orange text-white rounded-md transition-all duration-300 flex items-center justify-center ${isScrolled ? 'w-7 h-7 p-1' : 'w-9 h-9 p-1.5'}`}>
+              <ShoppingCart size={isScrolled ? 18 : 22} />
             </div>
-            Besa
+            Nexus Shop
           </Link>
 
           {/* Search Bar (Hidden on Mobile) */}
@@ -257,7 +258,17 @@ export default function Header() {
                     </h4>
                     
                     {isSearching ? (
-                      <div className="text-sm text-gray-500 animate-pulse py-4">Searching...</div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {[1, 2, 3, 4].map((i) => (
+                          <div key={i} className="flex items-center gap-3 p-2 rounded-lg animate-pulse">
+                            <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-md"></div>
+                            <div className="flex-1 space-y-2">
+                              <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+                              <div className="h-3 bg-brand-orange/30 dark:bg-brand-orange/20 rounded w-1/4"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     ) : searchQuery.trim() && searchResults.length === 0 ? (
                       <div className="text-sm text-gray-500 py-4">No products found matching "{searchQuery}".</div>
                     ) : (
@@ -393,7 +404,7 @@ export default function Header() {
                     <div className="absolute inset-0 bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-300 dark:text-blue-500/50">
                        [Headphones Image]
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4 transition-opacity group-hover/megaimg:opacity-90">
+                    <div className="absolute inset-0 bg-black/60 flex items-end p-4 transition-opacity group-hover/megaimg:bg-black/50">
                        <div>
                          <span className="text-brand-orange text-xs font-bold uppercase tracking-wider mb-1 block">New Arrival</span>
                          <span className="text-white font-bold leading-tight block">Premium Audio</span>
@@ -405,7 +416,7 @@ export default function Header() {
                     <div className="absolute inset-0 bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-300 dark:text-orange-500/50">
                        [Living Room Image]
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4 transition-opacity group-hover/megaimg:opacity-90">
+                    <div className="absolute inset-0 bg-black/60 flex items-end p-4 transition-opacity group-hover/megaimg:bg-black/50">
                        <div>
                          <span className="text-orange-300 text-xs font-bold uppercase tracking-wider mb-1 block">Up to 30% Off</span>
                          <span className="text-white font-bold leading-tight block">Modern Furniture</span>
@@ -435,77 +446,104 @@ export default function Header() {
         </div>
       </div>
     </div>
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/50 transition-opacity"
-            onClick={() => setIsMobileMenuOpen(false)}
-          ></div>
-          
-          {/* Drawer */}
-          <div className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white dark:bg-gray-900 shadow-xl">
-            <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 dark:border-gray-800">
-              <span className="font-bold text-lg text-brand-dark dark:text-white">Menu</span>
-              <button 
-                className="p-2 text-gray-500 hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange outline-none rounded"
-                onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Close Mobile Menu"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <nav className="flex-1 px-4 py-6 overflow-y-auto">
-              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Main Menu</h4>
-              <div className="space-y-4 mb-8">
-                <Link href="/" className="block text-base font-semibold text-gray-800 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-                <Link href="/shop" className="block text-base font-semibold text-gray-800 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>Shop</Link>
-                <Link href="/blog" className="block text-base font-semibold text-gray-800 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
-              </div>
-
-              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Categories</h4>
-              <div className="space-y-4">
-                <Link href="/category/electronic-devices" className="block text-base text-gray-600 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>Electronic Devices</Link>
-                <Link href="/category/tv-home-appliances" className="block text-base text-gray-600 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>TV & Home Appliances</Link>
-                <Link href="/category/health-beauty" className="block text-base text-gray-600 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>Health & Beauty</Link>
-                <Link href="/category/home-kitchen" className="block text-base text-gray-600 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>Home & Kitchen</Link>
-                <Link href="/category/fashion-clothing" className="block text-base text-gray-600 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>Fashion & Clothing</Link>
-                <Link href="/category/sports-travel" className="block text-base text-gray-600 hover:text-brand-orange" onClick={() => setIsMobileMenuOpen(false)}>Sports & Travel</Link>
-              </div>
-            </nav>
-            <div className="border-t border-gray-100 p-4">
-              {session ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 mb-4 border-b pb-4">
-                    {session.user?.image ? (
-                      <img src={session.user.image} alt="User" className="w-10 h-10 rounded-full" />
-                    ) : (
-                      <div className="w-10 h-10 bg-brand-orange text-white flex items-center justify-center rounded-full text-lg font-bold">
-                        {session.user?.name?.[0]?.toUpperCase() || 'U'}
-                      </div>
-                    )}
-                    <div>
-                      <p className="text-gray-900 font-bold">{session.user?.name}</p>
-                      <p className="text-gray-500 text-xs">{session.user?.email}</p>
-                    </div>
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-50 flex lg:hidden">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            
+            {/* Drawer */}
+            <motion.div 
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(e, { offset, velocity }) => {
+                if (offset.x < -100 || velocity.x < -500) {
+                  setIsMobileMenuOpen(false);
+                }
+              }}
+              className="relative flex w-[85%] max-w-sm flex-col h-full bg-white dark:bg-gray-900 shadow-2xl overflow-hidden rounded-r-2xl border-r border-gray-100 dark:border-gray-800"
+            >
+              <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
+                <span className="font-bold text-xl text-brand-dark dark:text-white flex items-center gap-2">
+                  <div className="bg-brand-orange text-white p-1.5 rounded-md">
+                    <ShoppingCart size={20} />
                   </div>
-                  {session.user?.email === "mohammadbitullah3@gmail.com" && (
-                    <Link href="/admin/products" className="block text-gray-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Admin Dashboard</Link>
-                  )}
-                  <Link href="/account/orders" className="block text-gray-700 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>Order History</Link>
-                  <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="flex items-center gap-2 text-red-500 font-semibold mt-4">
-                    <LogOut size={20} /> Logout
-                  </button>
+                  Nexus Shop
+                </span>
+                <button 
+                  className="p-2 text-gray-500 hover:text-brand-orange bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 focus-visible:ring-2 focus-visible:ring-brand-orange outline-none rounded-full transition-all active:scale-95"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  aria-label="Close Mobile Menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <nav className="flex-1 px-6 py-6 overflow-y-auto overscroll-contain">
+                <h4 className="text-xs font-bold text-brand-orange uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <span className="w-4 h-[2px] bg-brand-orange inline-block"></span> Main Menu
+                </h4>
+                <div className="space-y-2 mb-8">
+                  <Link href="/" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+                  <Link href="/shop" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Shop</Link>
+                  <Link href="/blog" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
                 </div>
-              ) : (
-                <Link href="/login" className="flex items-center gap-2 text-brand-orange font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
-                  <User size={20} /> Login / Register
-                </Link>
-              )}
-            </div>
+
+                <h4 className="text-xs font-bold text-brand-orange uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <span className="w-4 h-[2px] bg-brand-orange inline-block"></span> Categories
+                </h4>
+                <div className="space-y-1">
+                  <Link href="/category/electronic-devices" className="block text-[15px] font-medium text-gray-600 dark:text-gray-400 hover:text-brand-orange p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Electronic Devices</Link>
+                  <Link href="/category/tv-home-appliances" className="block text-[15px] font-medium text-gray-600 dark:text-gray-400 hover:text-brand-orange p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>TV & Home Appliances</Link>
+                  <Link href="/category/health-beauty" className="block text-[15px] font-medium text-gray-600 dark:text-gray-400 hover:text-brand-orange p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Health & Beauty</Link>
+                  <Link href="/category/home-kitchen" className="block text-[15px] font-medium text-gray-600 dark:text-gray-400 hover:text-brand-orange p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Home & Kitchen</Link>
+                  <Link href="/category/fashion-clothing" className="block text-[15px] font-medium text-gray-600 dark:text-gray-400 hover:text-brand-orange p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Fashion & Clothing</Link>
+                </div>
+              </nav>
+              <div className="p-6 bg-gray-50 dark:bg-[#111111] border-t border-gray-100 dark:border-gray-800 mt-auto">
+                {session ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 mb-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                      {session.user?.image ? (
+                        <img src={session.user.image} alt="User" className="w-12 h-12 rounded-full border-2 border-brand-orange" />
+                      ) : (
+                        <div className="w-12 h-12 bg-brand-orange text-white flex items-center justify-center rounded-full text-xl font-bold shadow-md">
+                          {session.user?.name?.[0]?.toUpperCase() || 'U'}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-gray-900 dark:text-white font-bold truncate">{session.user?.name}</p>
+                        <p className="text-gray-500 dark:text-gray-400 text-xs truncate">{session.user?.email}</p>
+                      </div>
+                    </div>
+                    {session.user?.email === "mohammadbitullah3@gmail.com" && (
+                      <Link href="/admin/products" className="block text-center bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-semibold py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Admin Dashboard</Link>
+                    )}
+                    <Link href="/account/orders" className="block text-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white font-semibold py-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Order History</Link>
+                    <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="w-full flex items-center justify-center gap-2 text-red-500 font-semibold py-3 mt-2 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors">
+                      <LogOut size={20} /> Logout
+                    </button>
+                  </div>
+                ) : (
+                  <Link href="/login" className="flex items-center justify-center gap-2 w-full bg-brand-orange text-white font-semibold py-4 rounded-xl shadow-premium hover:bg-orange-600 transition-colors active:scale-95" onClick={() => setIsMobileMenuOpen(false)}>
+                    <User size={20} /> Login or Register
+                  </Link>
+                )}
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </header>
   );
 }

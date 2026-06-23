@@ -13,8 +13,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const query = q || 'All Products';
   
   return {
-    title: `Search: ${query} | Besa E-Commerce`,
-    description: `Search results for ${query} at Besa. Discover amazing deals on top brands.`,
+    title: `Search: ${query} | Nexus Shop`,
+    description: `Search results for ${query} at Nexus Shop. Discover amazing deals on top brands.`,
   };
 }
 

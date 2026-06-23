@@ -49,7 +49,7 @@ export default function RegisterPage() {
       <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-black text-gray-900 mb-2">Create Account</h2>
-          <p className="text-gray-500">Join Besa to start shopping</p>
+          <p className="text-gray-500">Join Nexus Shop to start shopping</p>
         </div>
 
 
@@ -71,7 +71,7 @@ export default function RegisterPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-3 outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all"
+                className="w-full bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 py-3 outline-none focus:bg-white focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 transition-all"
                 placeholder="John Doe"
               />
             </div>
@@ -86,7 +86,7 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-3 outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all"
+                className="w-full bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 py-3 outline-none focus:bg-white focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 transition-all"
                 placeholder="you@example.com"
               />
             </div>
@@ -101,7 +101,7 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-3 outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all"
+                className="w-full bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 py-3 outline-none focus:bg-white focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 transition-all"
                 placeholder="••••••••"
                 minLength={6}
               />
@@ -111,7 +111,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-brand-orange text-white font-bold py-3 px-4 rounded-xl hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30 disabled:opacity-70"
+            className="w-full bg-brand-orange text-white font-bold py-3 px-4 rounded-xl hover:bg-orange-600 transition-all flex items-center justify-center gap-2 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

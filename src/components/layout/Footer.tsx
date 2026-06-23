@@ -26,9 +26,10 @@ export default function Footer() {
           
           {/* Company Info (Always visible) */}
           <div>
-            <h3 className="text-2xl font-black text-brand-orange tracking-tighter mb-6">BESA<span className="text-brand-dark dark:text-white">.</span></h3>
+            <h3 className="text-2xl font-black text-brand-orange tracking-tighter mb-6">NEXUS<span className="text-brand-dark dark:text-white"> SHOP</span></h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-              We are a premium e-commerce platform offering the highest quality products with world-class customer service and fast shipping globally.
+              We are a premium e-commerce platform offering the highest quality products with world-class customer service and fast shipping globally. <br /><br />
+              <span className="font-semibold text-gray-700 dark:text-gray-200">A proud company of <a href="https://www.saheragroup.com" target="_blank" rel="noopener noreferrer" className="text-brand-orange hover:underline">Sahera Group</a>.</span>
             </p>
             <div className="flex gap-4">
               <a href="#" className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center hover:bg-brand-orange dark:hover:bg-brand-orange hover:text-white transition-colors text-xs font-bold text-gray-600 dark:text-gray-300">FB</a>
@@ -50,7 +51,7 @@ export default function Footer() {
             <ul className={`space-y-4 text-sm text-gray-500 dark:text-gray-400 mt-6 md:mt-0 overflow-hidden transition-all duration-300 ${openSections.contact ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 md:max-h-96 md:opacity-100'}`}>
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-brand-orange shrink-0 mt-0.5" />
-                <span>123 Commerce Blvd, Tech District<br />New York, NY 10001</span>
+                <span>2300 Kishoreganj Sadar<br />Dhaka, Bangladesh</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={18} className="text-brand-orange shrink-0" />
@@ -58,7 +59,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-brand-orange shrink-0" />
-                <span>support@besa-ecommerce.com</span>
+                <span>support@saheragroup.com</span>
               </li>
             </ul>
           </div>
@@ -144,7 +145,7 @@ export default function Footer() {
               </div>
             </div>
             {/* Nexus */}
-            <div className="bg-gradient-to-b from-gray-100 to-gray-300 px-4 py-1.5 rounded-md flex items-center justify-center border border-gray-400 shadow-sm">
+            <div className="bg-gray-200 dark:bg-gray-800 px-4 py-1.5 rounded-md flex items-center justify-center border border-gray-300 dark:border-gray-700 shadow-sm">
                <span className="text-blue-800 font-black italic text-sm tracking-tighter">Nexus<span className="text-red-600">Pay</span></span>
             </div>
             {/* Rocket */}
@@ -160,7 +161,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center md:text-left">
-            &copy; {new Date().getFullYear()} Besa E-Commerce. All rights reserved.
+            &copy; {new Date().getFullYear()} Nexus Shop. A Sahera Group Company. All rights reserved.
           </p>
         </div>
       </div>

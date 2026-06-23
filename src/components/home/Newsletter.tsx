@@ -28,7 +28,7 @@ export default function Newsletter() {
             </div>
             <button 
               type="submit" 
-              className="bg-brand-orange text-white font-bold py-4 px-8 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-brand-orange/50 transition-all shadow-lg shadow-orange-500/30 whitespace-nowrap outline-none"
+              className="bg-brand-orange text-white font-bold py-4 px-8 rounded-xl hover:bg-orange-600 focus:ring-4 focus:ring-brand-orange/50 transition-all shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 whitespace-nowrap outline-none"
             >
               Subscribe
             </button>

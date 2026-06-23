@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import FilterSidebar from "@/components/category/FilterSidebar";
 import MobileFilterWrapper from "@/components/category/MobileFilterWrapper";
+import CategoryPills from "@/components/category/CategoryPills";
 import SortBar from "@/components/category/SortBar";
 import ProductGrid from "@/components/category/ProductGrid";
 import type { Metadata } from "next";
@@ -13,8 +14,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const titleName = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   
   return {
-    title: `${titleName} | Besa E-Commerce`,
-    description: `Shop the best ${titleName} online at Besa. Discover amazing deals on top brands.`,
+    title: `${titleName} | Nexus Shop`,
+    description: `Shop the best ${titleName} online at Nexus Shop. Discover amazing deals on top brands.`,
   };
 }
 
@@ -77,6 +78,9 @@ export default async function CategoryPage(
 
           {/* Main Content Area */}
           <div className="w-full lg:w-3/4">
+             {/* Category Pills Navigation */}
+             <CategoryPills />
+
              {/* Controls */}
              <SortBar />
 

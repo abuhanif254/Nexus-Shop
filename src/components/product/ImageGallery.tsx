@@ -48,7 +48,7 @@ export default function ImageGallery({ items }: ImageGalleryProps) {
 
   const getSafeImageUrl = (url: string, index: number) => {
     if (url.startsWith('/mock-')) {
-      return `https://placehold.co/800x800/f9fafb/9ca3af?text=Product+Image+${index + 1}`;
+      return `https://placehold.co/800x800/f8f9fa/9ca3af?text=Product+Image+${index + 1}`;
     }
     return url;
   };
@@ -63,7 +63,7 @@ export default function ImageGallery({ items }: ImageGalleryProps) {
           <button 
             key={i} 
             onClick={() => setActiveIndex(i)}
-            className={`w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-xl overflow-hidden border-2 flex items-center justify-center bg-gray-50 dark:bg-[#151515] transition-all relative group ${i === activeIndex ? 'border-brand-orange ring-2 ring-brand-orange/20' : 'border-transparent hover:border-gray-300 dark:hover:border-gray-700'}`}
+            className={`w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-xl overflow-hidden border-2 flex items-center justify-center bg-[#F8F9FA] dark:bg-[#151515] transition-all relative group ${i === activeIndex ? 'border-brand-orange ring-2 ring-brand-orange/20' : 'border-transparent hover:border-gray-300 dark:hover:border-gray-700'}`}
           >
             <Image 
               src={getSafeImageUrl(item.url, i)} 
@@ -90,7 +90,7 @@ export default function ImageGallery({ items }: ImageGalleryProps) {
       </div>
 
       {/* Main Image with Zoom or Video Player */}
-      <div className="relative w-full aspect-square bg-gray-50 dark:bg-[#151515] rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden group">
+      <div className="relative w-full aspect-square bg-[#F8F9FA] dark:bg-[#151515] rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden group">
         
         {activeItem.type === 'image' ? (
           <>

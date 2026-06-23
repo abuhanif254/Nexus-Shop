@@ -184,7 +184,7 @@ export async function POST(req: Request) {
           cancel_url: `${origin}/api/webhooks/sslcommerz?status=cancel&orderId=${orderId}`,
           ipn_url: `${origin}/api/webhooks/sslcommerz?status=ipn`,
           shipping_method: 'Courier',
-          product_name: 'Besa Store Items',
+          product_name: 'Nexus Shop Items',
           product_category: 'Ecommerce',
           product_profile: 'general',
           cus_name: shippingAddress.fullName || 'Customer Name',
