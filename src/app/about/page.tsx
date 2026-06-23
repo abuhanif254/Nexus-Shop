@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShieldCheck, Truck, Headphones, Globe, ArrowRight, Award, Users } from "lucide-react";
+import { ShieldCheck, Truck, Headphones, Globe, ArrowRight, Award, Users, Github, Facebook, Linkedin, Youtube, Instagram, Twitter, MapPin } from "lucide-react";
 
 export const metadata = {
   title: "About Us | Nexus Shop by Sahera Group",
@@ -124,7 +124,69 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 5. CTA SECTION */}
+      {/* 5. DEVELOPER SECTION */}
+      <section className="py-24 bg-gray-50 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+            <div className="grid grid-cols-1 md:grid-cols-5">
+              <div className="md:col-span-2 bg-brand-orange/5 relative min-h-[400px] flex items-center justify-center p-8">
+                <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2070&auto=format&fit=crop')] opacity-5 bg-cover bg-center" />
+                <div className="relative z-10 w-64 h-64 md:w-80 md:h-80 rounded-full border-8 border-white shadow-2xl overflow-hidden bg-brand-orange/10">
+                  <Image 
+                    src="https://ik.imagekit.io/ubwpdqyav/my_photo-removebg-preview.png?updatedAt=1776774813574"
+                    alt="MD Abu Hanif Mia"
+                    fill
+                    className="object-cover scale-110 translate-y-4"
+                  />
+                </div>
+              </div>
+              <div className="md:col-span-3 p-10 md:p-16 flex flex-col justify-center">
+                <div className="inline-flex items-center space-x-2 bg-orange-100 text-brand-orange px-3 py-1 rounded-full text-sm font-bold tracking-wider uppercase mb-6 w-max">
+                  <Users size={16} /> <span>Lead Developer & Architect</span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
+                  MD Abu Hanif Mia
+                </h2>
+                <h3 className="text-xl text-gray-500 font-medium mb-6">
+                  Full Stack Web Architect
+                </h3>
+                
+                <p className="text-gray-600 text-lg leading-relaxed mb-8">
+                  The visionary mind behind Nexus Shop's robust architecture. Dedicated to building scalable, high-performance, and visually stunning web experiences that elevate international e-commerce standards.
+                </p>
+
+                <div className="flex items-start space-x-3 text-gray-500 mb-8">
+                  <MapPin className="text-brand-orange shrink-0 mt-1" size={20} />
+                  <span className="text-lg">2300 Kishoreganj Sadar, Dhaka, Bangladesh</span>
+                </div>
+
+                <div className="flex flex-wrap gap-4">
+                  <Link href="#" className="w-12 h-12 bg-gray-100 text-gray-600 hover:bg-gray-900 hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm">
+                    <Github size={22} />
+                  </Link>
+                  <Link href="#" className="w-12 h-12 bg-gray-100 text-gray-600 hover:bg-[#0866FF] hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm">
+                    <Facebook size={22} />
+                  </Link>
+                  <Link href="#" className="w-12 h-12 bg-gray-100 text-gray-600 hover:bg-[#0A66C2] hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm">
+                    <Linkedin size={22} />
+                  </Link>
+                  <Link href="#" className="w-12 h-12 bg-gray-100 text-gray-600 hover:bg-[#FF0000] hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm">
+                    <Youtube size={22} />
+                  </Link>
+                  <Link href="#" className="w-12 h-12 bg-gray-100 text-gray-600 hover:bg-[#E1306C] hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm">
+                    <Instagram size={22} />
+                  </Link>
+                  <Link href="#" className="w-12 h-12 bg-gray-100 text-gray-600 hover:bg-black hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm">
+                    <Twitter size={22} />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. CTA SECTION */}
       <section className="py-24 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-900 rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden shadow-2xl">
