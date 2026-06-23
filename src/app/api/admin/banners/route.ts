@@ -27,7 +27,8 @@ export async function POST(req: Request) {
       image,
       link,
       position,
-      order: parseInt(order) || 0
+      order: parseInt(order) || 0,
+      createdAt: new Date()
     }).returning();
 
     return NextResponse.json({ success: true, data: newBanner[0] });
