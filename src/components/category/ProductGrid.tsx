@@ -38,7 +38,11 @@ export default function ProductGrid({ slug }: { slug: string }) {
       try {
         // Construct API URL with current search params
         const params = new URLSearchParams(searchParams.toString());
-        const res = await fetch(`/api/category/${slug}?${params.toString()}`);
+        const apiEndpoint = slug === 'search' 
+          ? `/api/search?${params.toString()}` 
+          : `/api/category/${slug}?${params.toString()}`;
+        
+        const res = await fetch(apiEndpoint);
         const result = await res.json();
         
         if (result.success) {
@@ -89,7 +93,11 @@ export default function ProductGrid({ slug }: { slug: string }) {
     try {
       // Simulate fetching next page
       const params = new URLSearchParams(searchParams.toString());
-      const res = await fetch(`/api/category/${slug}?${params.toString()}`);
+      const apiEndpoint = slug === 'search' 
+          ? `/api/search?${params.toString()}` 
+          : `/api/category/${slug}?${params.toString()}`;
+          
+      const res = await fetch(apiEndpoint);
       const result = await res.json();
       
       if (result.success) {

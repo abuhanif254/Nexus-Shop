@@ -2,16 +2,22 @@ import SidebarMenu from "@/components/layout/SidebarMenu";
 import HeroSection from "@/components/home/HeroSection";
 import TrustBenefits from "@/components/home/TrustBenefits";
 import FlashDeals from "@/components/home/FlashDeals";
+
+import RecommendedForYou from "@/components/product/RecommendedForYou";
+import RecentlyViewedProducts from "@/components/product/RecentlyViewedProducts";
 import PromoBanner from "@/components/home/PromoBanner";
 import PopularCategories from "@/components/home/PopularCategories";
 import RecommendedProducts from "@/components/home/RecommendedProducts";
 import BrandMarquee from "@/components/home/BrandMarquee";
 import Newsletter from "@/components/home/Newsletter";
 import FadeIn from "@/components/ui/FadeIn";
+import { db } from '@/db';
+import { products } from '@/db/schema';
 
 export const revalidate = 3600; // Cache for 1 hour
 
-export default function Home() {
+export default async function Home() {
+  const allProducts = await db.select().from(products);
   const jsonLd = [
     {
       '@context': 'https://schema.org',
@@ -72,7 +78,7 @@ export default function Home() {
       {/* Lightning Deals Section */}
       <section className="container mx-auto px-4 max-w-[1400px] py-8 md:py-12 border-t border-gray-100">
         <FadeIn>
-          <FlashDeals />
+          <FlashDeals initialProducts={allProducts} />
         </FadeIn>
       </section>
 
@@ -86,12 +92,22 @@ export default function Home() {
         <PopularCategories />
       </FadeIn>
 
-      {/* Recommended Products */}
+      {/* Recommended Products (Static) */}
       <section className="container mx-auto px-4 max-w-[1400px] py-8 md:py-12 border-t border-gray-100">
         <FadeIn delay={100}>
-          <RecommendedProducts />
+          <RecommendedProducts initialProducts={allProducts} />
         </FadeIn>
       </section>
+
+      {/* Personalized Recommendations */}
+      <FadeIn>
+        <RecommendedForYou />
+      </FadeIn>
+
+      {/* Recently Viewed */}
+      <FadeIn>
+        <RecentlyViewedProducts />
+      </FadeIn>
 
       {/* Brand Marquee */}
       <FadeIn delay={200}>

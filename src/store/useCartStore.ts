@@ -17,7 +17,7 @@ export interface CartItem extends Product {
 interface CartState {
   items: CartItem[];
   wishlist: Product[];
-  addItemToCart: (product: Product) => void;
+  addItemToCart: (product: Product, quantity?: number) => void;
   removeItemFromCart: (productId: number | string) => void;
   updateQuantity: (productId: number | string, quantity: number) => void;
   clearCart: () => void;
@@ -39,18 +39,18 @@ export const useCartStore = create<CartState>()(
       
       setIsCartOpen: (isOpen) => set({ isCartOpen: isOpen }),
       
-      addItemToCart: (product) => {
+      addItemToCart: (product, quantity = 1) => {
         set((state) => {
           const existingItem = state.items.find((item) => item.id === product.id);
           if (existingItem) {
             return {
               items: state.items.map((item) =>
-                item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
               ),
             };
           }
           useToastStore.getState().addToast(`${product.title} added to cart`, 'success');
-          return { items: [...state.items, { ...product, quantity: 1 }], isCartOpen: true };
+          return { items: [...state.items, { ...product, quantity }], isCartOpen: true };
         });
       },
       

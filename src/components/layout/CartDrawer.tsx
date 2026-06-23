@@ -4,6 +4,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { X, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { triggerHaptic } from "@/utils/haptics";
 
 export default function CartDrawer() {
   const { isCartOpen, setIsCartOpen, items, updateQuantity, removeItemFromCart, getCartTotal } = useCartStore();
@@ -25,18 +26,35 @@ export default function CartDrawer() {
         />
       )}
 
-      {/* Drawer */}
+      {/* Drawer / Bottom Sheet */}
       <div 
-        className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white shadow-2xl z-[70] transform transition-transform duration-500 ease-in-out flex flex-col ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Shopping Cart"
+        className={`fixed bg-white shadow-2xl z-[70] transform transition-transform duration-500 ease-out flex flex-col
+          /* Desktop: Right side drawer */
+          md:top-0 md:right-0 md:h-full md:w-[400px] md:max-w-[90vw] md:bottom-auto md:left-auto md:rounded-none
+          ${isCartOpen ? 'md:translate-x-0' : 'md:translate-x-full'}
+          
+          /* Mobile: Bottom Sheet */
+          max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:w-full max-md:h-[85vh] max-md:rounded-t-[2rem] max-md:top-auto
+          ${isCartOpen ? 'max-md:translate-y-0 max-md:translate-x-0' : 'max-md:translate-y-full max-md:translate-x-0'}
+        `}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white/80 backdrop-blur-md">
+        {/* Mobile Drag Handle Indicator */}
+        <div className="w-full flex justify-center pt-3 pb-1 md:hidden">
+          <div className="w-12 h-1.5 bg-gray-200 rounded-full"></div>
+        </div>
+
+        <div className="flex items-center justify-between px-6 pb-4 pt-2 md:pt-6 border-b border-gray-100 bg-white/80 backdrop-blur-md">
           <div className="flex items-center gap-2">
             <ShoppingBag size={24} className="text-brand-orange" />
             <h2 className="text-xl font-black text-gray-900">Your Cart</h2>
           </div>
           <button 
             onClick={() => setIsCartOpen(false)}
-            className="p-2 text-gray-400 hover:text-brand-orange hover:bg-orange-50 rounded-full transition-all"
+            className="p-2 text-gray-400 hover:text-brand-orange hover:bg-orange-50 rounded-full transition-all bg-gray-50 md:bg-transparent focus-visible:ring-2 focus-visible:ring-brand-orange outline-none"
+            aria-label="Close cart"
           >
             <X size={20} />
           </button>
@@ -73,16 +91,17 @@ export default function CartDrawer() {
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <span className="font-black text-brand-dark">${item.price.toFixed(2)}</span>
-                    <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-2 py-1 shadow-sm">
-                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="text-gray-500 hover:text-brand-orange">-</button>
+                    <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-2 py-1 shadow-sm min-h-[36px] min-w-[90px]">
+                      <button onClick={() => { updateQuantity(item.id, item.quantity - 1); triggerHaptic('light'); }} className="text-gray-500 hover:text-brand-orange min-w-[28px] min-h-[28px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-brand-orange outline-none rounded-full" aria-label="Decrease quantity">-</button>
                       <span className="text-xs font-bold w-4 text-center">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="text-gray-500 hover:text-brand-orange">+</button>
+                      <button onClick={() => { updateQuantity(item.id, item.quantity + 1); triggerHaptic('light'); }} className="text-gray-500 hover:text-brand-orange min-w-[28px] min-h-[28px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-brand-orange outline-none rounded-full" aria-label="Increase quantity">+</button>
                     </div>
                   </div>
                 </div>
                 <button 
-                  onClick={() => removeItemFromCart(item.id)}
-                  className="text-gray-300 hover:text-red-500 transition-colors p-1 self-start opacity-0 group-hover:opacity-100"
+                  onClick={() => { removeItemFromCart(item.id); triggerHaptic('medium'); }}
+                  className="text-gray-300 hover:text-red-500 transition-colors p-2 self-start md:opacity-0 group-hover:opacity-100 min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-brand-orange outline-none rounded-full"
+                  aria-label={`Remove ${item.title} from cart`}
                 >
                   <Trash2 size={16} />
                 </button>

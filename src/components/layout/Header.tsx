@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   Phone, 
   HelpCircle, 
@@ -42,6 +43,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const router = useRouter();
 
   const [language, setLanguage] = useState('English');
   const [currency, setCurrency] = useState('USD');
@@ -189,8 +191,9 @@ export default function Header() {
           
           {/* Mobile Hamburger (visible on small screens) */}
           <button 
-            className="lg:hidden text-brand-dark p-1"
+            className="lg:hidden text-brand-dark p-1 focus-visible:ring-2 focus-visible:ring-brand-orange outline-none rounded"
             onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Open Mobile Menu"
           >
             <Menu size={28} />
           </button>
@@ -205,7 +208,16 @@ export default function Header() {
 
           {/* Search Bar (Hidden on Mobile) */}
           <div className="hidden lg:flex flex-1 max-w-2xl relative group">
-            <div className={`flex w-full border-2 transition-all duration-300 rounded-full overflow-hidden bg-white dark:bg-gray-900 ${isSearchFocused ? 'border-brand-orange shadow-lg ring-4 ring-brand-orange/10' : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'}`}>
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                  setIsSearchFocused(false);
+                }
+              }}
+              className={`flex w-full border-2 transition-all duration-300 rounded-full overflow-hidden bg-white dark:bg-gray-900 ${isSearchFocused ? 'border-brand-orange shadow-lg ring-4 ring-brand-orange/10' : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'}`}
+            >
               <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 font-semibold cursor-pointer flex items-center gap-2 min-w-fit">
                 All Category <ChevronDown size={16} />
               </div>
@@ -217,11 +229,12 @@ export default function Header() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)} // Delay to allow clicks
+                aria-label="Search input"
               />
-              <button className="bg-brand-orange px-6 text-white hover:bg-orange-600 transition-colors">
+              <button type="submit" className="bg-brand-orange px-6 text-white hover:bg-orange-600 transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white outline-none" aria-label="Submit search">
                 <Search size={20} />
               </button>
-            </div>
+            </form>
 
             {/* Mega Search Dropdown */}
             {isSearchFocused && (
@@ -298,7 +311,7 @@ export default function Header() {
                 {mounted ? getWishlistCount() : 0}
               </span>
             </Link>
-            <button onClick={() => setIsCartOpen(true)} className="flex items-center gap-3 group hover:scale-105 active:scale-95 transition-all duration-300">
+            <button onClick={() => setIsCartOpen(true)} aria-label="Open Shopping Cart" className="flex items-center gap-3 group hover:scale-105 active:scale-95 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand-orange outline-none rounded p-1">
               <div className="relative">
                 <ShoppingCart size={28} className="text-gray-700 dark:text-gray-300 group-hover:text-brand-orange transition-colors" />
                 <span className="absolute -top-2 -right-2 bg-yellow-400 text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm animate-in zoom-in text-brand-dark">
@@ -313,19 +326,29 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Search Bar (Visible only on lg and smaller) */}
-        <div className="lg:hidden container mx-auto px-4 pb-4">
-          <div className="flex w-full border-2 border-gray-200 focus-within:border-brand-orange focus-within:ring-4 focus-within:ring-brand-orange/10 transition-all rounded-full overflow-hidden bg-white">
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (searchQuery.trim()) {
+              router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+            }
+          }}
+          className="lg:hidden container mx-auto px-4 pb-4"
+        >
+          <div className="flex w-full border-2 border-gray-200 dark:border-gray-800 focus-within:border-brand-orange focus-within:ring-4 focus-within:ring-brand-orange/10 transition-all rounded-full overflow-hidden bg-white dark:bg-gray-900">
             <input 
               type="text" 
               placeholder="Search for items..." 
-              className="flex-1 px-4 py-2 outline-none text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 px-4 py-2 outline-none text-sm bg-transparent dark:text-white"
+              aria-label="Mobile Search Input"
             />
-            <button className="bg-brand-orange px-4 text-white hover:bg-orange-600 transition-colors flex items-center justify-center">
+            <button type="submit" className="bg-brand-orange px-4 text-white hover:bg-orange-600 transition-colors flex items-center justify-center focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white outline-none" aria-label="Submit search">
               <Search size={18} />
             </button>
           </div>
-        </div>
+        </form>
 
         {/* Navigation (Desktop) */}
         <div className={`bg-brand-orange text-white hidden lg:block transition-all ${isScrolled ? 'hidden lg:hidden' : ''}`}>
@@ -425,8 +448,9 @@ export default function Header() {
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 dark:border-gray-800">
               <span className="font-bold text-lg text-brand-dark dark:text-white">Menu</span>
               <button 
-                className="p-2 text-gray-500 hover:text-brand-orange"
+                className="p-2 text-gray-500 hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange outline-none rounded"
                 onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close Mobile Menu"
               >
                 <X size={24} />
               </button>

@@ -155,6 +155,17 @@ export default function CartPage() {
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
 
+                {/* Express Checkout Options */}
+                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-3">
+                  <p className="text-xs text-center text-gray-500 font-semibold mb-1 uppercase tracking-wider">Express Checkout</p>
+                  <button className="w-full bg-black dark:bg-white dark:text-black text-white h-12 rounded-xl flex items-center justify-center hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+                    <span className="font-semibold tracking-tighter text-lg"> Pay</span>
+                  </button>
+                  <button className="w-full bg-white dark:bg-[#151515] border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 dark:hover:bg-[#222] transition-colors shadow-sm">
+                    <span className="font-bold tracking-tighter text-lg"><span className="text-blue-500">G</span><span className="text-red-500">o</span><span className="text-yellow-500">o</span><span className="text-blue-500">g</span><span className="text-green-500">l</span><span className="text-red-500">e</span> Pay</span>
+                  </button>
+                </div>
+
                 <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-500 font-medium">
                   <ShieldCheck size={16} className="text-green-500" />
                   Secure Encrypted Checkout

@@ -2,19 +2,28 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+
+export type GalleryItem = { url: string; type?: 'image' | 'video' | '360' };
 
 interface ImageGalleryProps {
-  images: string[];
+  items: GalleryItem[] | string[];
 }
 
-export default function ImageGallery({ images }: ImageGalleryProps) {
+export default function ImageGallery({ items }: ImageGalleryProps) {
+  // Normalize items to GalleryItem array
+  const normalizedItems: GalleryItem[] = items.map(item => 
+    typeof item === 'string' ? { url: item, type: 'image' } : item
+  );
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [zoomStyle, setZoomStyle] = useState({ opacity: 0, backgroundPosition: '50% 50%' });
   const imageRef = useRef<HTMLDivElement>(null);
 
+  const activeItem = normalizedItems[activeIndex];
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!imageRef.current) return;
+    if (!imageRef.current || activeItem.type !== 'image') return;
     const { left, top, width, height } = imageRef.current.getBoundingClientRect();
     const x = ((e.clientX - left) / width) * 100;
     const y = ((e.clientY - top) / height) * 100;
@@ -30,15 +39,13 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
   };
 
   const nextImage = () => {
-    setActiveIndex((prev) => (prev + 1) % images.length);
+    setActiveIndex((prev) => (prev + 1) % normalizedItems.length);
   };
 
   const prevImage = () => {
-    setActiveIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setActiveIndex((prev) => (prev === 0 ? normalizedItems.length - 1 : prev - 1));
   };
 
-  // Using a fallback placeholder if the URL is relative and image doesn't exist
-  // In a real app with real image URLs from DB, we wouldn't need this wrapper
   const getSafeImageUrl = (url: string, index: number) => {
     if (url.startsWith('/mock-')) {
       return `https://placehold.co/800x800/f9fafb/9ca3af?text=Product+Image+${index + 1}`;
@@ -46,60 +53,91 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
     return url;
   };
 
-  const activeImageUrl = getSafeImageUrl(images[activeIndex], activeIndex);
+  const activeMediaUrl = getSafeImageUrl(activeItem.url, activeIndex);
 
   return (
     <div className="w-full flex flex-col-reverse md:flex-row gap-4">
-      {/* Thumbnails (Vertical on Desktop, Horizontal on Mobile) */}
+      {/* Thumbnails */}
       <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto no-scrollbar md:w-24 shrink-0 pb-2 md:pb-0">
-        {images.map((img, i) => (
+        {normalizedItems.map((item, i) => (
           <button 
             key={i} 
             onClick={() => setActiveIndex(i)}
-            className={`w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-xl overflow-hidden border-2 flex items-center justify-center bg-gray-50 dark:bg-[#151515] transition-all relative ${i === activeIndex ? 'border-brand-orange ring-2 ring-brand-orange/20' : 'border-transparent hover:border-gray-300 dark:hover:border-gray-700'}`}
+            className={`w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-xl overflow-hidden border-2 flex items-center justify-center bg-gray-50 dark:bg-[#151515] transition-all relative group ${i === activeIndex ? 'border-brand-orange ring-2 ring-brand-orange/20' : 'border-transparent hover:border-gray-300 dark:hover:border-gray-700'}`}
           >
             <Image 
-              src={getSafeImageUrl(img, i)} 
+              src={getSafeImageUrl(item.url, i)} 
               alt={`Thumbnail ${i+1}`} 
               fill 
               sizes="96px"
-              className="object-cover" 
+              className={`object-cover ${item.type !== 'image' ? 'opacity-50' : ''}`} 
               unoptimized
             />
+            {item.type === 'video' && (
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                 <div className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-brand-orange transition-colors">
+                   <Play size={14} className="text-white ml-0.5" fill="currentColor" />
+                 </div>
+              </div>
+            )}
+            {item.type === '360' && (
+              <div className="absolute bottom-1 right-1 bg-black/70 text-[9px] text-white font-bold px-1.5 py-0.5 rounded backdrop-blur-sm">
+                360°
+              </div>
+            )}
           </button>
         ))}
       </div>
 
-      {/* Main Image with Zoom */}
+      {/* Main Image with Zoom or Video Player */}
       <div className="relative w-full aspect-square bg-gray-50 dark:bg-[#151515] rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden group">
-        <div 
-          ref={imageRef}
-          className="absolute inset-0 cursor-crosshair z-10"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-        />
         
-        {/* The Base Image */}
-        <Image 
-          src={activeImageUrl} 
-          alt="Product Main Image" 
-          fill 
-          priority
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover transition-opacity duration-300"
-          unoptimized
-        />
+        {activeItem.type === 'image' ? (
+          <>
+            <div 
+              ref={imageRef}
+              className="absolute inset-0 cursor-crosshair z-10"
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            />
+            
+            <Image 
+              src={activeMediaUrl} 
+              alt="Product Main Media" 
+              fill 
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover transition-opacity duration-300"
+              unoptimized
+            />
 
-        <div 
-          className="absolute inset-0 pointer-events-none z-20 md:block hidden transition-opacity duration-300"
-          style={{
-            ...zoomStyle,
-            backgroundImage: `url(${activeImageUrl})`,
-            backgroundSize: '250%', // 2.5x zoom
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: 'transparent'
-          }}
-        />
+            <div 
+              className="absolute inset-0 pointer-events-none z-20 md:block hidden transition-opacity duration-300"
+              style={{
+                ...zoomStyle,
+                backgroundImage: `url(${activeMediaUrl})`,
+                backgroundSize: '250%',
+                backgroundRepeat: 'no-repeat',
+                backgroundColor: 'transparent'
+              }}
+            />
+          </>
+        ) : activeItem.type === 'video' ? (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-black relative">
+            <Image src={activeMediaUrl} alt="Video Poster" fill className="object-cover opacity-50 blur-sm" unoptimized />
+            <div className="relative z-10 w-20 h-20 bg-brand-orange/90 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(255,107,0,0.4)]">
+              <Play size={32} className="text-white ml-2" fill="currentColor" />
+            </div>
+            <p className="relative z-10 text-white font-bold mt-4 tracking-widest text-sm uppercase">Play Video</p>
+          </div>
+        ) : (
+           <div className="w-full h-full flex flex-col items-center justify-center bg-[#151515] relative">
+            <Image src={activeMediaUrl} alt="360 Poster" fill className="object-cover opacity-70" unoptimized />
+            <div className="relative z-10 bg-black/60 backdrop-blur-md px-6 py-3 rounded-full text-white font-bold flex items-center gap-2 border border-white/10 cursor-pointer hover:bg-black/80 transition-colors">
+              Drag to rotate 360°
+            </div>
+          </div>
+        )}
 
         {/* Mobile Navigation Arrows */}
         <button 

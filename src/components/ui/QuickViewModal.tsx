@@ -69,25 +69,31 @@ export default function QuickViewModal({ isOpen, onClose, product }: QuickViewMo
       />
       
       {/* Modal Content */}
-      <div className="relative bg-white dark:bg-[#151515] w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:max-h-[650px] animate-in fade-in zoom-in-95 duration-200 border border-transparent dark:border-gray-800">
+      <div 
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quick-view-title"
+        className="relative bg-white dark:bg-[#151515] w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:max-h-[650px] animate-in fade-in zoom-in-95 duration-200 border border-transparent dark:border-gray-800"
+      >
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 z-50 w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors text-gray-500 dark:text-gray-400"
+          className="absolute top-4 right-4 z-50 w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors text-gray-500 dark:text-gray-400 focus-visible:ring-2 focus-visible:ring-brand-orange outline-none"
+          aria-label="Close Quick View"
         >
           <X size={20} />
         </button>
 
         {/* Left: Image Gallery */}
         <div className="w-full md:w-1/2 bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-gray-800 p-6 md:p-8 flex items-center overflow-y-auto no-scrollbar">
-           <ImageGallery images={mockImages} />
+           <ImageGallery items={mockImages} />
         </div>
 
         {/* Right: Details */}
         <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col overflow-y-auto">
           <p className="text-brand-orange font-bold text-sm uppercase tracking-widest mb-2">{product.brand}</p>
-          <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-tight mb-4 tracking-tight">{product.title}</h2>
+          <h2 id="quick-view-title" className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-tight mb-4 tracking-tight">{product.title}</h2>
           
           {/* Rating */}
           <div className="flex items-center gap-2 mb-6">

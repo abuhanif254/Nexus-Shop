@@ -7,8 +7,8 @@ import { useCountdown } from "@/hooks/useCountdown";
 
 // Types for fetched products
 interface FetchedProduct {
-  id: number;
-  discount: number;
+  id: string;
+  discount: number | null;
   featured: boolean;
   image: string;
   brand: string;
@@ -16,16 +16,14 @@ interface FetchedProduct {
   rating: number;
   reviews: number;
   price: number;
-  oldPrice: number;
-  vendor: string;
-  soldCount: number;
-  totalStock: number;
+  oldPrice: number | null;
+  vendor: string | null;
+  soldCount: number | null;
+  totalStock: number | null;
 }
 
-export default function FlashDeals() {
+export default function FlashDeals({ initialProducts = [] }: { initialProducts?: any[] }) {
   const [mounted, setMounted] = useState(false);
-  const [products, setProducts] = useState<FetchedProduct[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   
   // Set target date to 24 hours from now (for demo purposes)
   // In a real app, this would come from the backend API
@@ -34,23 +32,6 @@ export default function FlashDeals() {
 
   useEffect(() => {
     setMounted(true);
-    
-    // Fetch products from our edge API
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch('/api/products');
-        const json = await res.json();
-        if (json.success) {
-          setProducts(json.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch flash deals", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchProducts();
   }, []);
 
   return (
@@ -80,20 +61,11 @@ export default function FlashDeals() {
 
       {/* Products Horizontal Scroll Container */}
       <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        {isLoading ? (
-          // Skeleton loaders
-          [...Array(6)].map((_, i) => (
-            <div key={i} className="min-w-[250px] sm:min-w-[220px] snap-start h-[350px]">
-              <ProductCardSkeleton />
-            </div>
-          ))
-        ) : (
-          products.map((product) => (
-            <div key={product.id} className="min-w-[250px] sm:min-w-[220px] snap-start">
-              <ProductCard {...product} />
-            </div>
-          ))
-        )}
+        {initialProducts.map((product) => (
+          <div key={product.id} className="min-w-[250px] sm:min-w-[220px] snap-start">
+            <ProductCard {...product} />
+          </div>
+        ))}
       </div>
     </div>
   );

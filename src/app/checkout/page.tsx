@@ -164,10 +164,29 @@ export default function CheckoutPage() {
             
             {/* Step 1: Shipping */}
             <div className={`bg-white dark:bg-[#151515] rounded-3xl border ${step === 1 ? 'border-brand-orange shadow-2xl dark:shadow-[0_10px_40px_rgba(0,0,0,0.5)] ring-1 ring-brand-orange/20' : 'border-gray-200 dark:border-gray-800 opacity-70 hover:opacity-100'} p-6 md:p-8 transition-all duration-500`}>
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-4 mb-6">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step === 1 ? 'bg-brand-orange/10 text-brand-orange' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'}`}>1</div>
                 <h2 className={`text-2xl font-black tracking-tight ${step === 1 ? 'text-gray-900 dark:text-white' : 'text-gray-400'}`}>Shipping Information</h2>
               </div>
+              
+              {step === 1 && (
+                <>
+                  <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-in fade-in">
+                    <button className="flex-1 bg-black dark:bg-white dark:text-black text-white h-12 rounded-xl flex items-center justify-center hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+                      <span className="font-semibold tracking-tighter text-lg"> Pay</span>
+                    </button>
+                    <button className="flex-1 bg-white dark:bg-[#151515] border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 dark:hover:bg-[#222] transition-colors shadow-sm">
+                      <span className="font-bold tracking-tighter text-lg"><span className="text-blue-500">G</span><span className="text-red-500">o</span><span className="text-yellow-500">o</span><span className="text-blue-500">g</span><span className="text-green-500">l</span><span className="text-red-500">e</span> Pay</span>
+                    </button>
+                  </div>
+                  
+                  <div className="relative flex items-center py-5 mb-4 animate-in fade-in">
+                    <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+                    <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-bold uppercase tracking-wider">Or enter address manually</span>
+                    <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+                  </div>
+                </>
+              )}
               
               {step === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-in fade-in slide-in-from-top-4">

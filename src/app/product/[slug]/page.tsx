@@ -8,6 +8,8 @@ import { useCartStore } from "@/store/useCartStore";
 import ImageGallery from "@/components/product/ImageGallery";
 import VariantSelector, { Variant } from "@/components/product/VariantSelector";
 import ProductReviews from "@/components/product/ProductReviews";
+import RelatedProducts from "@/components/product/RelatedProducts";
+import { triggerHaptic } from "@/utils/haptics";
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const unwrappedParams = use(params);
@@ -22,10 +24,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
   // Default variants just for UI demo since our DB doesn't support complex variants yet
   const colors = [
-    { id: 'c1', name: 'Standard Edition', value: '#111827', type: 'color' as const },
+    { id: 'c1', name: 'Standard Edition', value: '#111827', type: 'color' as const, stock: 10 },
+    { id: 'c2', name: 'Limited White', value: '#ffffff', type: 'color' as const, stock: 0 }, // Out of stock example
   ];
   const sizes = [
-    { id: 's1', name: 'Standard Size', value: 'Std', type: 'size' as const },
+    { id: 's1', name: 'Standard Size', value: 'Std', type: 'size' as const, stock: 5 },
+    { id: 's2', name: 'Large Size', value: 'Lrg', type: 'size' as const, priceOffset: 20, stock: 0 }, // Out of stock example
   ];
 
   const [selectedVariantColor, setSelectedVariantColor] = useState<Variant | null>(colors[0]);
@@ -40,7 +44,22 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
           // Find product by slug match, ensuring we decode any URL characters
           const decodedSlug = decodeURIComponent(unwrappedParams.slug);
           const found = data.data.find((p: any) => p.title.toLowerCase().replace(/ /g, '-') === decodedSlug);
-          setProduct(found);
+          
+          if (found) {
+            setProduct(found);
+            
+            // Track recently viewed
+            import('@/store/useRecentlyViewedStore').then((module) => {
+              module.useRecentlyViewedStore.getState().addViewedItem({
+                id: found.id,
+                title: found.title,
+                price: found.price,
+                image: found.image,
+                brand: found.brand,
+                category: found.category
+              });
+            });
+          }
         }
         setLoading(false);
       });
@@ -60,35 +79,44 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   };
 
   const handleAddToCart = () => {
-    if (product.totalStock === 0) return;
+    // Determine the actual stock based on selected variants (if applicable)
+    const activeColorStock = selectedVariantColor?.stock ?? product.totalStock;
+    const activeSizeStock = selectedVariantSize?.stock ?? product.totalStock;
+    
+    // We take the minimum stock available if variations dictate it. In a real system, a SKU represents the combination.
+    const effectiveStock = Math.min(product.totalStock, activeColorStock, activeSizeStock);
+
+    if (effectiveStock === 0) return;
     
     // Check if adding this quantity exceeds stock
-    if (quantity > product.totalStock) {
-      alert(`Sorry, we only have ${product.totalStock} in stock.`);
+    if (quantity > effectiveStock) {
+      alert(`Sorry, we only have ${effectiveStock} in stock for this variation.`);
       return;
     }
 
-    const variantTitle = `${product.title} - ${selectedVariantColor?.name || ''} / ${selectedVariantSize?.value || ''}`;
-    
-    for(let i=0; i<quantity; i++) {
+    if (product) {
       addItemToCart({
-        id: `${product.id}-${selectedVariantColor?.id}-${selectedVariantSize?.id}`,
-        title: variantTitle,
-        price: currentPrice,
+        id: product.id,
+        title: product.title,
+        price: product.price,
         image: product.image,
-        brand: product.brand
-      });
+        brand: product.brand,
+      }, quantity);
+      triggerHaptic('success');
     }
   };
 
   const handleToggleWishlist = () => {
-    toggleWishlist({
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      image: product.image,
-      brand: product.brand
-    });
+    if (product) {
+      toggleWishlist({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        brand: product.brand,
+      });
+      triggerHaptic('light');
+    }
   };
 
   return (
@@ -115,7 +143,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
           
           {/* Left: Image Gallery */}
           <div className="w-full lg:w-1/2">
-            <ImageGallery images={[product.image, "/mock-product-2.jpg", "/mock-product-3.jpg"]} />
+            <ImageGallery items={[
+              { url: product.image, type: 'image' }, 
+              { url: "/mock-video-thumbnail.jpg", type: 'video' }, 
+              { url: "/mock-360-thumbnail.jpg", type: '360' }
+            ]} />
             
             {/* Mobile Floating Actions (Wishlist/Share) that were inside the old image container */}
             <div className="flex gap-3 md:hidden mt-4 justify-end">
@@ -142,12 +174,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </div>
                 <span className="text-sm text-gray-500 hover:text-brand-orange cursor-pointer transition-colors underline underline-offset-4">{product.reviews} Reviews</span>
                 <span className="text-gray-300">|</span>
-                {product.totalStock === 0 ? (
+                {Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999) === 0 ? (
                   <span className="text-sm text-red-600 font-bold bg-red-50 px-3 py-1 rounded-full border border-red-200">Out of Stock</span>
-                ) : product.totalStock < 10 ? (
-                  <span className="text-sm text-yellow-600 font-semibold bg-yellow-50 px-3 py-1 rounded-full border border-yellow-200">Only {product.totalStock} left!</span>
+                ) : Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999) < 10 ? (
+                  <span className="text-sm text-yellow-600 font-semibold bg-yellow-50 px-3 py-1 rounded-full border border-yellow-200">Only {Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999)} left!</span>
                 ) : (
-                  <span className="text-sm text-green-600 font-semibold bg-green-50 px-3 py-1 rounded-full">In Stock ({product.totalStock})</span>
+                  <span className="text-sm text-green-600 font-semibold bg-green-50 px-3 py-1 rounded-full">In Stock</span>
                 )}
               </div>
 
@@ -191,11 +223,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
                 <button 
                   onClick={handleAddToCart}
-                  disabled={product.totalStock === 0}
-                  className={`flex-1 text-white h-14 rounded-full font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-orange-500/30 ${product.totalStock === 0 ? 'bg-gray-400 cursor-not-allowed shadow-none' : 'bg-brand-orange hover:bg-orange-600'}`}
+                  disabled={Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999) === 0}
+                  className={`flex-1 text-white h-14 rounded-full font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-orange-500/30 ${Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999) === 0 ? 'bg-gray-400 cursor-not-allowed shadow-none' : 'bg-brand-orange hover:bg-orange-600'}`}
                 >
                   <ShoppingCart size={20} />
-                  {product.totalStock === 0 ? "Out of Stock" : "Add to Cart"}
+                  {Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999) === 0 ? "Out of Stock" : "Add to Cart"}
                 </button>
 
                 <button onClick={handleToggleWishlist} className={`w-14 h-14 border-2 border-gray-100 rounded-full flex items-center justify-center hover:border-brand-orange hover:text-brand-orange transition-colors ${isWishlisted ? 'text-red-500 border-red-500' : 'text-gray-600'}`}>
@@ -227,6 +259,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
         {/* Product Reviews Section */}
         <ProductReviews productId={product.id} />
+
+        {/* Frequently Bought Together / Related Products */}
+        {product.category && (
+          <RelatedProducts category={product.category} currentProductId={product.id} />
+        )}
       </div>
 
       {/* Mobile Fixed Add to Cart Bottom Bar */}
@@ -237,11 +274,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         </div>
         <button 
           onClick={handleAddToCart}
-          disabled={product.totalStock === 0}
-          className={`flex-1 text-white rounded-full font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-orange-500/30 active:scale-95 ${product.totalStock === 0 ? 'bg-gray-400 cursor-not-allowed shadow-none' : 'bg-brand-orange hover:bg-orange-600'}`}
+          disabled={Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999) === 0}
+          className={`flex-1 text-white rounded-full font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-orange-500/30 active:scale-95 ${Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999) === 0 ? 'bg-gray-400 cursor-not-allowed shadow-none' : 'bg-brand-orange hover:bg-orange-600'}`}
         >
           <ShoppingCart size={20} />
-          {product.totalStock === 0 ? "Out of Stock" : "Add to Cart"}
+          {Math.min(product.totalStock, selectedVariantColor?.stock ?? 999, selectedVariantSize?.stock ?? 999) === 0 ? "Out of Stock" : "Add to Cart"}
         </button>
       </div>
 

@@ -7,6 +7,7 @@ import { Star, ShoppingCart, Heart, Eye } from 'lucide-react';
 import { useCartStore } from '@/store/useCartStore';
 import QuickViewModal from '@/components/ui/QuickViewModal';
 import { motion } from 'framer-motion';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface ProductCardProps {
   id: number | string;
@@ -49,11 +50,13 @@ export default function ProductCard({
     e.preventDefault();
     if (totalStock === 0) return;
     addItemToCart({ id, title, price, image, brand });
+    triggerHaptic('success');
   };
 
   const handleToggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     toggleWishlist({ id, title, price, image, brand });
+    triggerHaptic('light');
   };
 
   return (
@@ -87,6 +90,7 @@ export default function ProductCard({
             alt={title} 
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            priority={featured}
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
         ) : (
@@ -102,8 +106,9 @@ export default function ProductCard({
             whileTap={{ scale: 0.95 }}
             onClick={handleAddToCart}
             disabled={totalStock === 0}
-            className={`text-white p-3 rounded-full shadow-lg transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 ${totalStock === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-brand-orange hover:bg-orange-600'}`}
+            className={`text-white p-3 rounded-full shadow-lg transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 focus-visible:ring-2 focus-visible:ring-brand-orange outline-none ${totalStock === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-brand-orange hover:bg-orange-600'}`}
             title={totalStock === 0 ? "Out of Stock" : "Add to Cart"}
+            aria-label={totalStock === 0 ? "Out of Stock" : "Add to Cart"}
           >
             <ShoppingCart size={20} />
           </motion.button>
@@ -111,8 +116,9 @@ export default function ProductCard({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={(e) => { e.preventDefault(); setIsQuickViewOpen(true); }}
-            className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-3 rounded-full shadow-lg transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-[50ms] hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-3 rounded-full shadow-lg transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-[50ms] hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:ring-2 focus-visible:ring-brand-orange outline-none"
             title="Quick View"
+            aria-label="Quick View"
           >
             <Eye size={20} />
           </motion.button>
@@ -120,8 +126,9 @@ export default function ProductCard({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleToggleWishlist}
-            className={`bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-100 hover:bg-gray-50 dark:hover:bg-gray-700 ${isWishlisted ? 'text-red-500' : 'text-gray-600 dark:text-gray-300'}`}
+            className={`bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300 delay-100 hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:ring-2 focus-visible:ring-brand-orange outline-none ${isWishlisted ? 'text-red-500' : 'text-gray-600 dark:text-gray-300'}`}
             title="Wishlist"
+            aria-label={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
           >
             <Heart size={20} fill={isWishlisted ? "currentColor" : "none"} />
           </motion.button>

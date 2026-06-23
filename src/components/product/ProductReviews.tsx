@@ -110,10 +110,21 @@ export default function ProductReviews({ productId }: { productId: string }) {
                 />
               </div>
 
+              {/* Image Upload (Mock UI) */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Attach Images (Optional)</label>
+                <div className="flex gap-2 flex-wrap">
+                  <div className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-brand-orange hover:border-brand-orange cursor-pointer transition-colors">
+                    <span className="text-2xl leading-none">+</span>
+                    <span className="text-[10px] font-semibold mt-1 text-center leading-tight">Upload</span>
+                  </div>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-brand-dark text-white font-bold py-3 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="w-full bg-brand-dark text-white font-bold py-3 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 mt-2"
               >
                 {submitting ? "Submitting..." : "Submit Review"}
               </button>

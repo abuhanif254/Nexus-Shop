@@ -9,6 +9,7 @@ export interface Variant {
   value: string;
   type: 'color' | 'size';
   priceOffset?: number; // E.g., +$20 for XL size
+  stock?: number; // Added to handle variation-level stock
 }
 
 interface VariantSelectorProps {
@@ -44,11 +45,16 @@ export default function VariantSelector({ colors, sizes, onVariantChange }: Vari
             {colors.map((color) => (
               <button
                 key={color.id}
-                onClick={() => handleColorChange(color)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${selectedColor?.id === color.id ? 'ring-2 ring-brand-orange ring-offset-2' : 'ring-1 ring-gray-200 hover:ring-gray-300'}`}
+                onClick={() => color.stock !== 0 && handleColorChange(color)}
+                disabled={color.stock === 0}
+                className={`relative w-10 h-10 rounded-full flex items-center justify-center transition-all focus-visible:ring-2 focus-visible:ring-brand-orange outline-none ${selectedColor?.id === color.id ? 'ring-2 ring-brand-orange ring-offset-2' : 'ring-1 ring-gray-200'} ${color.stock !== 0 ? 'hover:ring-gray-300' : 'opacity-40 cursor-not-allowed'}`}
                 style={{ backgroundColor: color.value }}
-                title={color.name}
+                title={color.stock === 0 ? `${color.name} - Out of Stock` : color.name}
               >
+                {/* Diagonal line to indicate out of stock */}
+                {color.stock === 0 && (
+                  <div className="absolute inset-0 w-full h-full bg-red-500/80 rounded-full" style={{ clipPath: 'polygon(0 45%, 100% 45%, 100% 55%, 0 55%)', transform: 'rotate(45deg)' }}></div>
+                )}
                 {selectedColor?.id === color.id && (
                   <Check size={16} className={['#ffffff', '#fff', 'white'].includes(color.value.toLowerCase()) ? 'text-gray-900' : 'text-white'} />
                 )}
@@ -69,10 +75,16 @@ export default function VariantSelector({ colors, sizes, onVariantChange }: Vari
             {sizes.map((size) => (
               <button
                 key={size.id}
-                onClick={() => handleSizeChange(size)}
-                className={`min-w-[4rem] h-12 px-4 rounded-xl font-bold transition-all border-2 ${selectedSize?.id === size.id ? 'border-brand-orange bg-orange-50 text-brand-orange' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}`}
+                onClick={() => size.stock !== 0 && handleSizeChange(size)}
+                disabled={size.stock === 0}
+                className={`relative min-w-[4rem] h-12 px-4 rounded-xl font-bold transition-all border-2 focus-visible:ring-2 focus-visible:ring-brand-orange outline-none overflow-hidden ${selectedSize?.id === size.id ? 'border-brand-orange bg-orange-50 text-brand-orange' : size.stock === 0 ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}`}
+                title={size.stock === 0 ? `${size.name || size.value} - Out of Stock` : undefined}
               >
                 {size.value}
+                {/* Diagonal line to indicate out of stock */}
+                {size.stock === 0 && (
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[2px] bg-gray-300 -rotate-12"></div>
+                )}
               </button>
             ))}
           </div>
