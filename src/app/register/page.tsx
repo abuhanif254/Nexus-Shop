@@ -52,23 +52,7 @@ export default function RegisterPage() {
           <p className="text-gray-500">Join Besa to start shopping</p>
         </div>
 
-        {/* Google Register */}
-        <button
-          onClick={() => signIn("google", { redirectTo: "/" })}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-bold py-3 px-4 rounded-xl hover:bg-gray-50 hover:shadow-sm transition-all mb-6"
-        >
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-          Sign up with Google
-        </button>
 
-        <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or register with email</span>
-          </div>
-        </div>
 
         {error && (
           <div className="bg-red-50 text-red-500 text-sm p-3 rounded-lg mb-6 border border-red-100">
