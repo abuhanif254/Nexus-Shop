@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, MapPin, Package, Truck, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
+import { Search, MapPin, Package, Truck, CheckCircle2, AlertCircle, RefreshCw, Clock } from "lucide-react";
 import Link from "next/link";
 
 const steps = [
