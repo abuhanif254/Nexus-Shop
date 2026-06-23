@@ -57,7 +57,10 @@ export default function CheckoutPage() {
         })
       });
 
-      if (!response.ok) throw new Error('Failed to create order');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || 'Failed to create order');
+      }
       
       const result = await response.json();
       
@@ -66,9 +69,9 @@ export default function CheckoutPage() {
       } else {
         router.push(`/checkout/success?orderId=${result.orderId}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Checkout error:', error);
-      alert('There was a problem processing your order. Please try again.');
+      alert(error.message || 'There was a problem processing your order. Please try again.');
     }
   };
 
