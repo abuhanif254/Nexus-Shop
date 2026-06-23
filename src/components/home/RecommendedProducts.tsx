@@ -20,10 +20,14 @@ interface FetchedProduct {
 
 export default function RecommendedProducts({ initialProducts = [] }: { initialProducts?: any[] }) {
   // Shuffle and pick exactly 5 for the asymmetric grid layout
-  const [products] = useState(() => {
-    const shuffled = [...initialProducts].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 5);
+  const [products, setProducts] = useState(() => {
+    return initialProducts.slice(0, 5);
   });
+
+  useEffect(() => {
+    const shuffled = [...initialProducts].sort(() => 0.5 - Math.random());
+    setProducts(shuffled.slice(0, 5));
+  }, [initialProducts]);
 
   return (
     <div className="w-full">

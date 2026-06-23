@@ -434,12 +434,8 @@ export default function Header() {
             <ul className="flex items-center gap-6 text-sm font-semibold">
               <li><Link href="/" className="hover:text-yellow-300 flex items-center gap-1">Home <ChevronDown size={14} /></Link></li>
               <li><Link href="/shop" className="hover:text-yellow-300 flex items-center gap-1">Shop</Link></li>
-              <li><Link href="/faq" className="hover:text-yellow-300">FAQ</Link></li>
-              <li><Link href="/contact" className="hover:text-yellow-300">Contact Us</Link></li>
               <li><Link href="/electronics" className="hover:text-yellow-300 flex items-center gap-1">Electronics Devices <ChevronDown size={14} /></Link></li>
               <li><Link href="/blog" className="hover:text-yellow-300 flex items-center gap-1">Blog <ChevronDown size={14} /></Link></li>
-              <li><Link href="/about" className="hover:text-yellow-300">About Us</Link></li>
-              <li><Link href="/vendor" className="hover:text-yellow-300">Become A Vendor</Link></li>
             </ul>
             <div className="text-sm font-bold animate-pulse cursor-pointer border-b border-transparent hover:border-white transition-colors">
               Flash Deals
@@ -499,9 +495,6 @@ export default function Header() {
                   <Link href="/" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
                   <Link href="/shop" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Shop</Link>
                   <Link href="/blog" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
-                  <Link href="/faq" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>FAQ</Link>
-                  <Link href="/contact" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Contact Us</Link>
-                  <Link href="/about" className="block text-base font-semibold text-gray-800 dark:text-gray-200 hover:text-brand-orange p-3 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-800 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>About Us</Link>
                 </div>
 
                 <h4 className="text-xs font-bold text-brand-orange uppercase tracking-widest mb-4 flex items-center gap-2">

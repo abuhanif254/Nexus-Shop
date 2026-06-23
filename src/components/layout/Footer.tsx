@@ -78,7 +78,8 @@ export default function Footer() {
               <li><Link href="/shop" className="hover:text-brand-orange transition-colors">Shop</Link></li>
               <li><Link href="/faq" className="hover:text-brand-orange transition-colors">FAQ</Link></li>
               <li><Link href="/contact" className="hover:text-brand-orange transition-colors">Contact Us</Link></li>
-              <li><Link href="/track" className="hover:text-brand-orange transition-colors">Track Order</Link></li>
+              <li><Link href="/vendor" className="hover:text-brand-orange transition-colors">Become A Vendor</Link></li>
+              <li><Link href="/track-order" className="hover:text-brand-orange transition-colors">Track Order</Link></li>
             </ul>
           </div>
 
