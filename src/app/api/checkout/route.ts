@@ -168,15 +168,19 @@ export async function POST(req: Request) {
     }
 
     if (paymentMethod === 'SSLCOMMERZ') {
-      const SSLCommerzPayment = require('sslcommerz-lts');
       const store_id = process.env.STORE_ID || 'nexus6a39eba39cefb';
       const store_passwd = process.env.STORE_PASSWORD || 'nexus6a39eba39cefb@ssl';
       const is_live = false; // true for live, false for sandbox
+      const apiUrl = is_live 
+        ? 'https://securepay.sslcommerz.com/gwprocess/v4/api.php' 
+        : 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php';
 
       const origin = req.headers.get('origin') || 'http://localhost:3000';
 
-      const data = {
-          total_amount: calculatedTotal * 115, // Assuming shop is in USD, converting to BDT
+      const data: Record<string, string> = {
+          store_id,
+          store_passwd,
+          total_amount: (calculatedTotal * 115).toString(), // Assuming shop is in USD, converting to BDT
           currency: 'BDT',
           tran_id: orderId, // unique transaction id
           success_url: `${origin}/api/webhooks/sslcommerz?status=success&orderId=${orderId}`,
@@ -206,10 +210,19 @@ export async function POST(req: Request) {
           ship_country: 'Bangladesh',
       };
       
-      const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
-      
+      const formData = new URLSearchParams();
+      for (const key in data) {
+          formData.append(key, data[key]);
+      }
+
       try {
-        const apiResponse = await sslcz.init(data);
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData.toString()
+        });
+        const apiResponse = await response.json();
+        
         if (apiResponse?.GatewayPageURL) {
           return NextResponse.json({
             success: true,
@@ -218,7 +231,8 @@ export async function POST(req: Request) {
             message: "Redirecting to SSLCommerz..."
           }, { status: 201 });
         } else {
-          throw new Error('No GatewayPageURL found in SSLCommerz response');
+          console.error('SSLCommerz Error:', apiResponse);
+          throw new Error(apiResponse?.failedreason || 'No GatewayPageURL found in SSLCommerz response');
         }
       } catch (e: any) {
          console.error("SSLCommerz initialization failed", e);
