@@ -22,11 +22,11 @@ export async function POST(req: Request) {
     }
 
     // --- INVENTORY CHECK ---
-    const productIds = items.map((i: any) => i.id.toString().split('-')[0]);
+    const productIds = items.map((i: any) => i.id.toString());
     const dbProducts = await db.select().from(products).where(inArray(products.id, productIds));
     
     for (const item of items) {
-      const baseProductId = item.id.toString().split('-')[0];
+      const baseProductId = item.id.toString();
       const dbProduct = dbProducts.find(p => p.id === baseProductId);
       if (!dbProduct) {
         return NextResponse.json({ error: `Product not found: ${item.title}` }, { status: 400 });
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
       });
 
       // Decrement stock
-      const baseProductId = item.id.toString().split('-')[0];
+      const baseProductId = item.id.toString();
       const dbProduct = dbProducts.find(p => p.id === baseProductId)!;
       await db.update(products)
         .set({ totalStock: dbProduct.totalStock - item.quantity })

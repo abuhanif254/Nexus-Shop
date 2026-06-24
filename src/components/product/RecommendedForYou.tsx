@@ -44,7 +44,7 @@ export default function RecommendedForYou() {
         if (result.success) {
           // Filter out items the user already viewed or has in cart to show *new* recommendations
           const viewedIds = new Set(viewedItems.map(i => i.id));
-          const cartIds = new Set(cartItems.map(i => parseInt(String(i.id).split('-')[0])));
+          const cartIds = new Set(cartItems.map(i => String(i.id)));
           
           const recommended = result.data
             .filter((p: any) => !viewedIds.has(p.id) && !cartIds.has(p.id))
