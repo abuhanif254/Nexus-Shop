@@ -44,6 +44,33 @@ export default function OrderActions({ orderId, currentStatus, paymentStatus }: 
     }
   };
 
+  const handlePaymentStatusChange = async (newPaymentStatus: string) => {
+    if (newPaymentStatus === paymentStatus) {
+      setIsOpen(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/orders/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentStatus: newPaymentStatus }),
+      });
+      
+      if (res.ok) {
+        router.refresh();
+      } else {
+        alert("Failed to update payment status");
+      }
+    } catch (e) {
+      alert("Error updating payment status");
+    } finally {
+      setLoading(false);
+      setIsOpen(false);
+    }
+  };
+
   const handleRefund = async () => {
     if (!confirm("Are you sure you want to refund this order? This action cannot be undone.")) return;
     
@@ -85,7 +112,7 @@ export default function OrderActions({ orderId, currentStatus, paymentStatus }: 
           />
           <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="p-2 border-b border-gray-50 bg-gray-50">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Update Status</span>
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Delivery Status</span>
             </div>
             <ul className="py-1">
               {statuses.map(status => (
@@ -99,7 +126,24 @@ export default function OrderActions({ orderId, currentStatus, paymentStatus }: 
                   </button>
                 </li>
               ))}
-              
+            </ul>
+
+            <div className="p-2 border-y border-gray-50 bg-gray-50 mt-1">
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Payment Status</span>
+            </div>
+            <ul className="py-1">
+              {['PENDING', 'PAID', 'FAILED', 'REFUNDED'].map(pStatus => (
+                <li key={pStatus}>
+                  <button 
+                    onClick={() => handlePaymentStatusChange(pStatus)}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-brand-orange transition-colors flex items-center justify-between"
+                  >
+                    {pStatus}
+                    {paymentStatus === pStatus && <Check size={14} className="text-brand-orange" />}
+                  </button>
+                </li>
+              ))}
+
               {paymentStatus === 'PAID' && (
                 <>
                   <div className="border-t border-gray-100 my-1"></div>
@@ -108,7 +152,7 @@ export default function OrderActions({ orderId, currentStatus, paymentStatus }: 
                       onClick={handleRefund}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-semibold transition-colors flex items-center justify-between"
                     >
-                      Refund Order
+                      Process Refund
                     </button>
                   </li>
                 </>

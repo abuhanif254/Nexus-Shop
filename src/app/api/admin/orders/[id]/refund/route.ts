@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { orders } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_mock', {
@@ -56,6 +57,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         status: 'CANCELLED' 
       })
       .where(eq(orders.id, id));
+
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({ success: true, message: "Order refunded successfully" }, { status: 200 });
 
