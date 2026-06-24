@@ -1,7 +1,17 @@
 import { MetadataRoute } from 'next';
 import { db } from "@/db";
-import { products, posts } from "@/db/schema";
+import { products, posts, categories } from "@/db/schema";
 import { eq } from 'drizzle-orm';
+
+// Helper to safely format slugs and strip invalid XML characters
+const formatSlug = (text: string) => {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .replace(/&/g, 'and') // Replace & with 'and' for SEO and XML safety
+    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric chars with hyphen
+    .replace(/^-+|-+$/g, ''); // Trim hyphens
+};
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.shop.nexuscalculator.net';
@@ -12,10 +22,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let allPosts: any[] = [];
   
   try {
-    // Fetch Products & Categories
+    // Fetch Products
     allProducts = await db.select().from(products);
-    const categorySet = new Set(allProducts.map(p => p.category));
-    allCategories = Array.from(categorySet).map(c => ({ slug: (c || '').toLowerCase().replace(/ /g, '-') }));
+    
+    // Fetch Categories directly from the categories table
+    allCategories = await db.select().from(categories);
+
+    // Also include any implicit categories from products that might not be in the categories table
+    const dbCategorySlugs = new Set(allCategories.map(c => c.slug));
+    const implicitCategories = new Set(allProducts.map(p => p.category));
+    implicitCategories.forEach(c => {
+      if (c) {
+        const slug = formatSlug(c);
+        if (!dbCategorySlugs.has(slug)) {
+          allCategories.push({ slug });
+          dbCategorySlugs.add(slug);
+        }
+      }
+    });
 
     // Fetch Published Blog Posts
     allPosts = await db.select()
@@ -27,7 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 1. Dynamic Products
   const productUrls = allProducts.map((product) => ({
-    url: `${baseUrl}/product/${product.title.toLowerCase().replace(/ /g, '-')}`,
+    url: `${baseUrl}/product/${formatSlug(product.title)}`,
     lastModified: product.updatedAt ? new Date(product.updatedAt) : new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
