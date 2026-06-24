@@ -3,24 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const categories = [
-  { name: "All", slug: "all" },
-  { name: "Smartphones", slug: "smartphones" },
-  { name: "Laptops", slug: "laptops" },
-  { name: "Audio & Video", slug: "audio-video" },
-  { name: "Cameras", slug: "cameras" },
-  { name: "Wearables", slug: "wearables" },
-  { name: "Gaming", slug: "gaming" },
-  { name: "Home Appliances", slug: "home-appliances" }
-];
-
-export default function CategoryPills() {
+export default function CategoryPills({ categories = [] }: { categories?: any[] }) {
   const pathname = usePathname();
   const currentSlug = pathname.split('/').pop() || 'all';
 
+  const displayCategories = [
+    { name: "All", slug: "all" },
+    ...categories.map(c => ({ name: c.name, slug: c.slug }))
+  ];
+
   return (
     <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 mb-6 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-      {categories.map((cat) => {
+      {displayCategories.map((cat) => {
         const isActive = currentSlug === cat.slug || (currentSlug === 'shop' && cat.slug === 'all');
         const href = cat.slug === 'all' ? '/shop' : `/category/${cat.slug}`;
         

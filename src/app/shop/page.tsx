@@ -7,6 +7,8 @@ import SortBar from "@/components/category/SortBar";
 import ProductGrid from "@/components/category/ProductGrid";
 import ShopHeroBanner from "@/components/shop/ShopHeroBanner";
 import type { Metadata } from "next";
+import { db } from "@/db";
+import { categories, brands } from "@/db/schema";
 
 export const revalidate = 3600; // Cache for 1 hour
 
@@ -15,8 +17,14 @@ export const metadata: Metadata = {
   description: "Browse our entire catalog of products at Nexus Shop. Find the best deals on electronics, home appliances, fashion, and more.",
 };
 
-export default function ShopPage() {
+export default async function ShopPage() {
   const titleName = "All Products";
+  
+  // Fetch dynamic categories and brands from DB
+  const [dbCategories, dbBrands] = await Promise.all([
+    db.select().from(categories),
+    db.select().from(brands)
+  ]);
 
   // SEO: ItemList Schema
   const jsonLd = {
@@ -51,7 +59,7 @@ export default function ShopPage() {
         {/* Hero Banner */}
         <ShopHeroBanner />
 
-        {/* Page Header (Optional now since we have the banner, but let's keep it minimal if needed, actually let's remove it and let the banner take over) */}
+        {/* Page Header */}
         <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm mb-6 flex justify-between items-end">
           <div>
             <h1 className="text-2xl font-bold text-gray-800 capitalize mb-1">{titleName}</h1>
@@ -65,14 +73,14 @@ export default function ShopPage() {
           {/* Sidebar Area */}
           <div className="w-full lg:w-1/4">
             <MobileFilterWrapper>
-              <FilterSidebar />
+              <FilterSidebar categories={dbCategories} brands={dbBrands} />
             </MobileFilterWrapper>
           </div>
 
           {/* Main Content Area */}
           <div className="w-full lg:w-3/4">
              {/* Category Pills Navigation */}
-             <CategoryPills />
+             <CategoryPills categories={dbCategories} />
 
              {/* Controls */}
              <SortBar />

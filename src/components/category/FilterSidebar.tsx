@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp, Check, Star, X } from "lucide-react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function FilterSidebar() {
+export default function FilterSidebar({ categories = [], brands = [] }: { categories?: any[], brands?: any[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -127,12 +127,12 @@ export default function FilterSidebar() {
           <AnimatePresence>
             {expandedSections.categories && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-2 mt-2 overflow-hidden">
-                {['Smartphones', 'Laptops', 'Audio', 'Accessories'].map((cat) => (
-                  <label key={cat} className="flex items-center gap-2 cursor-pointer group" onClick={() => updateFilters('category', currentCategory === cat ? null : cat)}>
-                    <div className={`w-4 h-4 border rounded flex items-center justify-center transition-colors ${currentCategory === cat ? 'bg-brand-orange border-brand-orange text-white' : 'border-gray-300 dark:border-gray-600 group-hover:border-brand-orange'}`}>
-                      {currentCategory === cat && <Check size={12} />}
+                {categories.map((cat) => (
+                  <label key={cat.slug} className="flex items-center gap-2 cursor-pointer group" onClick={() => updateFilters('category', currentCategory === cat.name ? null : cat.name)}>
+                    <div className={`w-4 h-4 border rounded flex items-center justify-center transition-colors ${currentCategory === cat.name ? 'bg-brand-orange border-brand-orange text-white' : 'border-gray-300 dark:border-gray-600 group-hover:border-brand-orange'}`}>
+                      {currentCategory === cat.name && <Check size={12} />}
                     </div>
-                    <span className={`text-sm transition-colors ${currentCategory === cat ? 'text-brand-orange font-semibold' : 'text-gray-600 dark:text-gray-400 group-hover:text-brand-orange'}`}>{cat}</span>
+                    <span className={`text-sm transition-colors ${currentCategory === cat.name ? 'text-brand-orange font-semibold' : 'text-gray-600 dark:text-gray-400 group-hover:text-brand-orange'}`}>{cat.name}</span>
                   </label>
                 ))}
               </motion.div>
@@ -220,17 +220,17 @@ export default function FilterSidebar() {
           <AnimatePresence>
             {expandedSections.brands && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-wrap gap-2 mt-2 overflow-hidden">
-                {['Apple', 'Samsung', 'Sony', 'Dell', 'HP', 'Lenovo', 'Asus'].map((brand) => (
+                {brands.map((b) => (
                   <button 
-                    key={brand} 
-                    onClick={() => updateFilters('brand', currentBrand === brand ? null : brand)}
+                    key={b.slug} 
+                    onClick={() => updateFilters('brand', currentBrand === b.name ? null : b.name)}
                     className={`px-6 py-2 rounded-full text-sm font-bold transition-all border ${
-                      currentBrand === brand 
+                      currentBrand === b.name 
                         ? 'bg-brand-dark dark:bg-white border-brand-dark dark:border-white text-white dark:text-brand-dark shadow-md' 
                         : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-brand-orange hover:text-brand-orange hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                   >
-                    {brand}
+                    {b.name}
                   </button>
                 ))}
               </motion.div>

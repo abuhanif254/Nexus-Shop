@@ -6,6 +6,8 @@ import CategoryPills from "@/components/category/CategoryPills";
 import SortBar from "@/components/category/SortBar";
 import ProductGrid from "@/components/category/ProductGrid";
 import type { Metadata } from "next";
+import { db } from "@/db";
+import { categories, brands } from "@/db/schema";
 
 export const revalidate = 3600; // Cache for 1 hour
 
@@ -27,6 +29,12 @@ export default async function CategoryPage(
   const params = await props.params;
   const slug = params.slug;
   const titleName = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+  // Fetch dynamic categories and brands from DB
+  const [dbCategories, dbBrands] = await Promise.all([
+    db.select().from(categories),
+    db.select().from(brands)
+  ]);
 
   // SEO: ItemList Schema
   const jsonLd = {
@@ -72,14 +80,14 @@ export default async function CategoryPage(
           {/* Sidebar Area */}
           <div className="w-full lg:w-1/4">
             <MobileFilterWrapper>
-              <FilterSidebar />
+              <FilterSidebar categories={dbCategories} brands={dbBrands} />
             </MobileFilterWrapper>
           </div>
 
           {/* Main Content Area */}
           <div className="w-full lg:w-3/4">
              {/* Category Pills Navigation */}
-             <CategoryPills />
+             <CategoryPills categories={dbCategories} />
 
              {/* Controls */}
              <SortBar />
