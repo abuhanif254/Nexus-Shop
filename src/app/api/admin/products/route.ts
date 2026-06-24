@@ -1,8 +1,7 @@
-
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { products } from '@/db/schema';
-
+import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 
 
@@ -47,6 +46,9 @@ export async function POST(request: Request) {
     };
 
     await db.insert(products).values(newProduct);
+
+    // Revalidate the entire site layout so the new product shows up everywhere
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({ success: true, data: newProduct });
   } catch (error: any) {

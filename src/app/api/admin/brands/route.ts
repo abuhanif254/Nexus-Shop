@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { brands } from '@/db/schema';
 import { desc } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +29,8 @@ export async function POST(req: Request) {
       slug,
       logo: logo || null
     }).returning();
+
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({ success: true, data: newBrand[0] });
   } catch (error: any) {

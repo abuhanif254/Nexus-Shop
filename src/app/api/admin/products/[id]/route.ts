@@ -1,8 +1,8 @@
-
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { products } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 
 
@@ -37,6 +37,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     await db.update(products).set(updateData).where(eq(products.id, id));
 
+    revalidatePath('/', 'layout');
+
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 400 });
@@ -49,6 +51,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     const { id } = await params;
     
     await db.delete(products).where(eq(products.id, id));
+
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
