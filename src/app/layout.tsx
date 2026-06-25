@@ -50,10 +50,13 @@ export const metadata: Metadata = {
     description: "Discover the best products at Nexus Shop. A proud company of Sahera Group.",
   },
   alternates: {
-    // RSS autodiscovery — browsers and Google Publisher Center detect this
-    types: {
-      'application/rss+xml': `${SITE_URL}/feed.xml`,
-    },
+    types: { 'application/rss+xml': `${SITE_URL}/feed.xml` },
+  },
+  // Explicit viewport for consistent rendering across devices
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
   },
 };
 
@@ -64,6 +67,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preconnect — eliminates DNS + TLS round-trips for external fonts/images */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://cdn.pixabay.com" />
+      </head>
       <body className={`antialiased pb-24 md:pb-0 ${outfit.variable} ${inter.variable} font-sans`}>
 
         {/* ── WebSite schema — enables Google Sitelinks Searchbox ── */}

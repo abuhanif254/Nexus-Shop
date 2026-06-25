@@ -9,7 +9,7 @@ import AffiliateBanner from "@/components/ui/AffiliateBanner";
 import CategoryFilter from "@/components/blog/CategoryFilter";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: revalidate every 60s
 
 export const metadata: Metadata = {
   title: "Blog — The Nexus Journal | Nexus Shop",
@@ -264,7 +264,9 @@ export default async function BlogIndexPage({
                         {/* Full-bleed image */}
                         <div className="relative w-full aspect-[21/9] overflow-hidden bg-gray-100">
                           {featured.featuredImage ? (
-                            <Image src={featured.featuredImage} alt={featured.title} fill priority className="object-cover group-hover:scale-105 transition-transform duration-[1200ms]" />
+                            <Image src={featured.featuredImage} alt={featured.title} fill priority
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 900px"
+                              className="object-cover group-hover:scale-105 transition-transform duration-[1200ms]" />
                           ) : (
                             <div className="w-full h-full bg-gradient-to-br from-brand-dark to-gray-800 flex items-center justify-center">
                               <span className="font-black text-8xl text-brand-orange/20">{featured.title.charAt(0)}</span>

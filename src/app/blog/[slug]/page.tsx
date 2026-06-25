@@ -15,7 +15,7 @@ import ViewCounter from "@/components/blog/ViewCounter";
 import TableOfContents from "@/components/blog/TableOfContents";
 import CopyLinkButton from "@/components/blog/CopyLinkButton";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30; // ISR: fresh enough for view counts, avoids cold starts
 
 function getReadingTime(content: string) {
   const text = content.replace(/<[^>]*>?/gm, "");
@@ -125,6 +125,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               fill
               className="object-cover opacity-35"
               priority
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/75 to-brand-dark/30" />
           </>
