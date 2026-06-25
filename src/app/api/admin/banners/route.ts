@@ -17,10 +17,10 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { image, link, position, order } = body;
+    const { image, link, position, order, title, subtitle, buttonText, active } = body;
 
     if (!image || !link || !position) {
-      return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Image URL, affiliate link, and position are required" }, { status: 400 });
     }
 
     const newBanner = await db.insert(banners).values({
@@ -28,7 +28,11 @@ export async function POST(req: Request) {
       link,
       position,
       order: parseInt(order) || 0,
-      createdAt: new Date()
+      title: title || null,
+      subtitle: subtitle || null,
+      buttonText: buttonText || null,
+      active: active !== undefined ? Boolean(active) : true,
+      createdAt: new Date(),
     }).returning();
 
     return NextResponse.json({ success: true, data: newBanner[0] });

@@ -22,10 +22,14 @@ export const products = pgTable('products', {
 
 export const banners = pgTable('banners', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  title: text('title'),          // Headline text shown on the banner
+  subtitle: text('subtitle'),    // Optional sub-text / short description
+  buttonText: text('button_text'), // CTA button label, e.g. "Get This Deal"
   image: text('image').notNull(),
-  link: text('link').notNull(),
-  position: text('position').notNull(), // 'home', 'shop', etc.
+  link: text('link').notNull(),   // Affiliate link (opens when image or button clicked)
+  position: text('position').notNull(), // 'home' | 'shop' | 'blog' | 'blog_post' | 'sidebar' | 'promo_strip' | 'category'
   order: integer('order').notNull().default(0),
+  active: boolean('active').notNull().default(true),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull(),
 });
 

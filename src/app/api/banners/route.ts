@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { banners } from '@/db/schema';
-import { eq, asc } from 'drizzle-orm';
+import { eq, and, asc } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,13 +10,12 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const position = searchParams.get('position');
 
-    let query: any = db.select().from(banners).orderBy(asc(banners.order));
+    // Only serve active banners to the public
+    const conditions = position
+      ? and(eq(banners.position, position), eq(banners.active, true))
+      : eq(banners.active, true);
 
-    if (position) {
-      query = db.select().from(banners).where(eq(banners.position, position)).orderBy(asc(banners.order));
-    }
-
-    const data = await query;
+    const data = await db.select().from(banners).where(conditions).orderBy(asc(banners.order));
     return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error("Fetch Banners Error:", error);
