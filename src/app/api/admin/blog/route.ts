@@ -17,27 +17,36 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, slug, content, excerpt, featuredImage, isPublished } = body;
+    const {
+      title, slug, content, excerpt, featuredImage, isPublished,
+      author, category, tags, seoTitle, seoDescription,
+    } = body;
 
     if (!title || !slug || !content) {
-      return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Missing required fields: title, slug, content" }, { status: 400 });
     }
 
     const newPost = await db.insert(posts).values({
       title,
       slug,
       content,
-      excerpt: excerpt || null,
-      featuredImage: featuredImage || null,
-      isPublished: !!isPublished,
-      publishedAt: isPublished ? new Date() : null,
+      excerpt:        excerpt        || null,
+      featuredImage:  featuredImage  || null,
+      isPublished:    !!isPublished,
+      publishedAt:    isPublished ? new Date() : null,
+      author:         author         || null,
+      category:       category       || null,
+      tags:           tags           || null,
+      seoTitle:       seoTitle       || null,
+      seoDescription: seoDescription || null,
+      viewCount: 0,
     }).returning();
 
     return NextResponse.json({ success: true, data: newPost[0] });
   } catch (error: any) {
     console.error("Create Post Error:", error);
     if (error.code === '23505') {
-      return NextResponse.json({ success: false, error: "Slug already exists" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Slug already exists — please choose a unique slug." }, { status: 400 });
     }
     return NextResponse.json({ success: false, error: "Failed to create post" }, { status: 500 });
   }

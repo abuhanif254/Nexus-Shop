@@ -4,10 +4,11 @@ import { eq, and, not, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Clock, Link2, Mail } from "lucide-react";
+import { ArrowLeft, Clock, Link2, Tag, FolderOpen } from "lucide-react";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import ReadingProgress from "@/components/blog/ReadingProgress";
 import AffiliateBanner from "@/components/ui/AffiliateBanner";
+import ViewCounter from "@/components/blog/ViewCounter";
 
 export const dynamic = 'force-dynamic';
 
@@ -21,10 +22,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const data = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
   if (!data.length) return { title: 'Not Found' };
-  
+
+  const post = data[0];
+  const siteUrl = 'https://www.shop.nexuscalculator.net';
+
   return {
-    title: `${data[0].title} | Nexus Shop Blog`,
-    description: data[0].excerpt || data[0].content.substring(0, 150),
+    title: post.seoTitle || `${post.title} | Nexus Shop Blog`,
+    description: post.seoDescription || post.excerpt || post.content.replace(/<[^>]*>?/gm, '').substring(0, 160),
+    openGraph: {
+      title: post.seoTitle || post.title,
+      description: post.seoDescription || post.excerpt || '',
+      url: `${siteUrl}/blog/${post.slug}`,
+      type: 'article',
+      images: post.featuredImage ? [{ url: post.featuredImage }] : [],
+      publishedTime: post.publishedAt?.toISOString(),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.seoTitle || post.title,
+      description: post.seoDescription || post.excerpt || '',
+      images: post.featuredImage ? [post.featuredImage] : [],
+    },
   };
 }
 
@@ -46,24 +64,36 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .orderBy(desc(posts.publishedAt))
     .limit(3);
 
-  // Structured Data (Step 9)
+  // Structured Data — enhanced with author, keywords, articleSection
+  const siteUrl = 'https://www.shop.nexuscalculator.net';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: post.title,
+    headline: post.seoTitle || post.title,
+    description: post.seoDescription || post.excerpt || '',
     image: post.featuredImage ? [post.featuredImage] : [],
     datePublished: post.publishedAt?.toISOString(),
     dateModified: post.updatedAt?.toISOString(),
+    url: `${siteUrl}/blog/${post.slug}`,
     author: [{
+      '@type': post.author ? 'Person' : 'Organization',
+      name: post.author || 'Nexus Shop',
+      url: siteUrl,
+    }],
+    publisher: {
       '@type': 'Organization',
       name: 'Nexus Shop',
-      url: 'https://nexus-shop.com'
-    }]
+      url: siteUrl,
+    },
+    ...(post.tags && { keywords: post.tags }),
+    ...(post.category && { articleSection: post.category }),
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-white relative">
       <ReadingProgress />
+      {/* Fire-and-forget view counter */}
+      <ViewCounter slug={post.slug} />
       
       {/* Step 9: Inject JSON-LD */}
       <script
@@ -93,6 +123,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <ArrowLeft size={18} className="mr-2" /> Back to Journal
               </Link>
             )}
+
+            {/* Category + tags row */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-5">
+              {post.category && (
+                <Link href={`/blog?category=${encodeURIComponent(post.category)}`}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-orange bg-brand-orange/10 border border-brand-orange/30 px-3 py-1 rounded-full uppercase tracking-wider hover:bg-brand-orange/20 transition-colors">
+                  <FolderOpen size={11} /> {post.category}
+                </Link>
+              )}
+              {post.tags && post.tags.split(',').map(t => t.trim()).filter(Boolean).map(tag => (
+                <span key={tag} className="inline-flex items-center gap-1 text-[10px] font-bold text-gray-400 bg-white/10 border border-white/20 px-2.5 py-0.5 rounded-full">
+                  <Tag size={9} /> {tag}
+                </span>
+              ))}
+            </div>
+
             <div className="flex items-center justify-center gap-4 text-sm font-bold text-gray-400 mb-6 uppercase tracking-widest">
               <span>
                 {post.publishedAt ? new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(post.publishedAt)) : ''}
@@ -101,6 +147,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <span className="flex items-center gap-1.5 text-brand-orange">
                 <Clock size={16} /> {readingTime} MIN READ
               </span>
+              {post.author && (
+                <>
+                  <span className="text-gray-600">•</span>
+                  <span className="text-gray-400">By {post.author}</span>
+                </>
+              )}
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-[1.1] mb-6 tracking-tight">
               {post.title}

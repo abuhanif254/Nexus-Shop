@@ -74,9 +74,23 @@ export const posts = pgTable('posts', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   title: text('title').notNull(),
   slug: text('slug').notNull().unique(),
-  content: text('content').notNull(), // HTML string
-  excerpt: text('excerpt'),
+  content: text('content').notNull(),         // HTML string from rich text editor
+  excerpt: text('excerpt'),                    // Short summary shown on cards
   featuredImage: text('featured_image'),
+
+  // ── Authoring ──
+  author: text('author'),                      // Author display name
+  category: text('category'),                  // Blog category (free-text)
+  tags: text('tags'),                          // Comma-separated tag list e.g. "seo,affiliate,tech"
+
+  // ── SEO ──
+  seoTitle: text('seo_title'),                 // Custom <title> (falls back to title)
+  seoDescription: text('seo_description'),     // Custom meta description (falls back to excerpt)
+
+  // ── Analytics ──
+  viewCount: integer('view_count').notNull().default(0),
+
+  // ── Status ──
   isPublished: boolean('is_published').default(false),
   publishedAt: timestamp('published_at', { mode: 'date' }),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
