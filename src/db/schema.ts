@@ -52,6 +52,7 @@ export const storeSettings = pgTable('store_settings', {
   currency: text('currency').notNull().default('USD'),
   taxRate: doublePrecision('tax_rate').notNull().default(0),
   flatShippingFee: doublePrecision('flat_shipping_fee').notNull().default(0),
+  ordersEnabled: boolean('orders_enabled').notNull().default(true),
   updatedAt: timestamp('updated_at', { mode: 'date' }).notNull().defaultNow(),
 });
 

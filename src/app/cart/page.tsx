@@ -2,15 +2,20 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, ShieldCheck } from "lucide-react";
+import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, ShieldCheck, Sparkles, PauseCircle, ExternalLink } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 
 export default function CartPage() {
   const [mounted, setMounted] = useState(false);
+  const [ordersEnabled, setOrdersEnabled] = useState(true);
   const { items, removeItemFromCart, updateQuantity, getCartTotal } = useCartStore();
 
   useEffect(() => {
     setMounted(true);
+    fetch('/api/store-settings')
+      .then(r => r.json())
+      .then(d => setOrdersEnabled(d.ordersEnabled !== false))
+      .catch(() => setOrdersEnabled(true));
   }, []);
 
   if (!mounted) return null; // Prevent hydration mismatch
@@ -150,21 +155,45 @@ export default function CartPage() {
                   <p className="text-xs text-gray-400 mt-1 text-right">Including VAT</p>
                 </div>
 
-                <Link href="/checkout" className="w-full bg-brand-orange text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30 flex items-center justify-center gap-2 group">
+                <Link href="/checkout" className={`w-full py-4 rounded-xl font-bold transition-colors shadow-lg flex items-center justify-center gap-2 group ${ordersEnabled ? 'bg-brand-orange text-white hover:bg-orange-600 shadow-orange-500/30' : 'bg-gray-100 text-gray-400 cursor-not-allowed pointer-events-none'}`}>
                   Proceed to Checkout
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 {/* Express Checkout Options */}
-                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-3">
-                  <p className="text-xs text-center text-gray-500 font-semibold mb-1 uppercase tracking-wider">Express Checkout</p>
-                  <button className="w-full bg-black dark:bg-white dark:text-black text-white h-12 rounded-xl flex items-center justify-center hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
-                    <span className="font-semibold tracking-tighter text-lg"> Pay</span>
-                  </button>
-                  <button className="w-full bg-white dark:bg-[#151515] border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 dark:hover:bg-[#222] transition-colors shadow-sm">
-                    <span className="font-bold tracking-tighter text-lg"><span className="text-blue-500">G</span><span className="text-red-500">o</span><span className="text-yellow-500">o</span><span className="text-blue-500">g</span><span className="text-green-500">l</span><span className="text-red-500">e</span> Pay</span>
-                  </button>
-                </div>
+                {ordersEnabled && (
+                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-3">
+                    <p className="text-xs text-center text-gray-500 font-semibold mb-1 uppercase tracking-wider">Express Checkout</p>
+                    <button className="w-full bg-black dark:bg-white dark:text-black text-white h-12 rounded-xl flex items-center justify-center hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+                      <span className="font-semibold tracking-tighter text-lg"> Pay</span>
+                    </button>
+                    <button className="w-full bg-white dark:bg-[#151515] border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 dark:hover:bg-[#222] transition-colors shadow-sm">
+                      <span className="font-bold tracking-tighter text-lg"><span className="text-blue-500">G</span><span className="text-red-500">o</span><span className="text-yellow-500">o</span><span className="text-blue-500">g</span><span className="text-green-500">l</span><span className="text-red-500">e</span> Pay</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* Affiliate mode — shown when orders are paused */}
+                {!ordersEnabled && (
+                  <div className="mt-4 rounded-2xl overflow-hidden border border-amber-200">
+                    <div className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 border-b border-amber-200">
+                      <PauseCircle size={14} className="text-amber-600" />
+                      <p className="text-xs font-bold text-amber-700 uppercase tracking-wide">Orders Temporarily Paused</p>
+                    </div>
+                    <div className="p-4 text-center bg-gradient-to-br from-amber-50 to-orange-50">
+                      <p className="text-sm font-semibold text-gray-700 mb-1 leading-snug">
+                        We&apos;re not taking orders right now — but we&apos;ve curated <span className="text-brand-orange font-black">exclusive affiliate deals</span> for you!
+                      </p>
+                      <p className="text-xs text-gray-500 mb-4">Click below to explore deals and save big.</p>
+                      <Link
+                        href="/blog"
+                        className="w-full bg-brand-orange text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-all active:scale-95"
+                      >
+                        <Sparkles size={16} /> Explore Deals <ExternalLink size={14} />
+                      </Link>
+                    </div>
+                  </div>
+                )}
 
                 <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-500 font-medium">
                   <ShieldCheck size={16} className="text-green-500" />

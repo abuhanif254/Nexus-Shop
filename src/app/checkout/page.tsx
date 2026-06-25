@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ShieldCheck, CreditCard, Banknote, MapPin, Truck, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShieldCheck, CreditCard, Banknote, MapPin, Truck, Check, Sparkles, PauseCircle } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -23,6 +23,8 @@ type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 export default function CheckoutPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [ordersEnabled, setOrdersEnabled] = useState(true);
+  const [checkingFlag, setCheckingFlag] = useState(true);
   const { items, getCartTotal } = useCartStore();
   const [loadingAddress, setLoadingAddress] = useState(true);
 
@@ -81,6 +83,13 @@ export default function CheckoutPage() {
       router.push('/cart');
     }
 
+    // Check if orders are enabled
+    fetch('/api/store-settings')
+      .then(r => r.json())
+      .then(d => setOrdersEnabled(d.ordersEnabled !== false))
+      .catch(() => setOrdersEnabled(true))
+      .finally(() => setCheckingFlag(false));
+
     fetch('/api/account/addresses')
       .then(res => res.json())
       .then(data => {
@@ -102,6 +111,59 @@ export default function CheckoutPage() {
   }, [items, router, reset]);
 
   if (!mounted || items.length === 0) return null;
+
+  // While checking the flag, show a small loading state
+  if (checkingFlag) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-brand-orange border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
+
+  // ── ORDERS PAUSED: full-screen affiliate redirect ──
+  if (!ordersEnabled) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="max-w-lg w-full text-center">
+          {/* Icon */}
+          <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <PauseCircle size={40} className="text-amber-500" />
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">
+            Orders Are Temporarily Paused
+          </h1>
+          <p className="text-gray-500 text-lg leading-relaxed mb-2">
+            We&apos;re not processing orders right now, but we&apos;ve curated
+            <span className="text-brand-orange font-bold"> exclusive affiliate deals </span>
+            you&apos;ll love.
+          </p>
+          <p className="text-gray-400 text-sm mb-8">
+            Explore our hand-picked recommendations and save big on top products.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/blog"
+              className="bg-brand-orange text-white px-8 py-4 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-200 hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg"
+            >
+              <Sparkles size={20} />
+              Explore Affiliate Deals
+              <ArrowRight size={18} />
+            </Link>
+            <Link
+              href="/"
+              className="bg-white border-2 border-gray-200 text-gray-700 px-8 py-4 rounded-xl font-bold hover:border-gray-300 transition-all flex items-center justify-center gap-2"
+            >
+              <ArrowLeft size={18} />
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const subtotal = getCartTotal();
   const tax = subtotal * 0.08;

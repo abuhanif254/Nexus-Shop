@@ -1,7 +1,7 @@
 "use client";
 
 import { useCartStore } from "@/store/useCartStore";
-import { X, Trash2, ShoppingBag, ArrowRight, ShoppingCart } from "lucide-react";
+import { X, Trash2, ShoppingBag, ArrowRight, ShoppingCart, Sparkles, PauseCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { triggerHaptic } from "@/utils/haptics";
@@ -10,9 +10,15 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function CartDrawer() {
   const { isCartOpen, setIsCartOpen, items, updateQuantity, removeItemFromCart, getCartTotal } = useCartStore();
   const [mounted, setMounted] = useState(false);
+  const [ordersEnabled, setOrdersEnabled] = useState(true);
 
   useEffect(() => {
     setMounted(true);
+    // Fetch the store mode flag — fail safe defaults to true
+    fetch('/api/store-settings')
+      .then(r => r.json())
+      .then(d => setOrdersEnabled(d.ordersEnabled !== false))
+      .catch(() => setOrdersEnabled(true));
   }, []);
 
   if (!mounted) return null;
@@ -143,13 +149,43 @@ export default function CartDrawer() {
                     <span className="text-2xl font-black text-brand-orange">${getCartTotal().toFixed(2)}</span>
                   </div>
                 </div>
-                <Link 
-                  href="/checkout" 
-                  onClick={() => setIsCartOpen(false)}
-                  className="w-full bg-brand-orange text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-all shadow-premium hover:shadow-premium-hover active:scale-95 text-lg"
-                >
-                  Checkout Now <ArrowRight size={20} />
-                </Link>
+
+                {ordersEnabled ? (
+                  <Link
+                    href="/checkout"
+                    onClick={() => setIsCartOpen(false)}
+                    className="w-full bg-brand-orange text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-all shadow-premium hover:shadow-premium-hover active:scale-95 text-lg"
+                  >
+                    Checkout Now <ArrowRight size={20} />
+                  </Link>
+                ) : (
+                  /* ── AFFILIATE MODE BANNER (shown when orders are paused) ── */
+                  <div className="rounded-2xl overflow-hidden border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50">
+                    {/* Paused notice */}
+                    <div className="flex items-center gap-2 px-4 py-2.5 bg-amber-100 border-b border-amber-200">
+                      <PauseCircle size={14} className="text-amber-600 shrink-0" />
+                      <p className="text-xs font-bold text-amber-700 uppercase tracking-wide">Orders Temporarily Paused</p>
+                    </div>
+                    {/* Message */}
+                    <div className="p-4 text-center">
+                      <p className="text-sm font-semibold text-gray-700 mb-1 leading-snug">
+                        We&apos;re not processing orders right now — but we&apos;ve found <span className="text-brand-orange font-black">amazing deals</span> for you!
+                      </p>
+                      <p className="text-xs text-gray-500 mb-4">
+                        Explore our curated affiliate picks and save big.
+                      </p>
+                      <Link
+                        href="/blog"
+                        onClick={() => setIsCartOpen(false)}
+                        className="w-full bg-brand-orange text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-all active:scale-95 shadow-lg shadow-orange-200"
+                      >
+                        <Sparkles size={16} />
+                        Explore Affiliate Deals
+                        <ArrowRight size={16} />
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </motion.div>
