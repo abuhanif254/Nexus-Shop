@@ -3,7 +3,8 @@ import { posts } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, ChevronRight } from "lucide-react";
+import { Mail } from "lucide-react";
+import AffiliateBanner from "@/components/ui/AffiliateBanner";
 
 export default async function BlogSidebar() {
   // Fetch 3 most recent posts for the widget
@@ -21,8 +22,12 @@ export default async function BlogSidebar() {
   ];
 
   return (
-    <aside className="w-full lg:w-[30%] flex flex-col gap-12 sticky top-24 self-start">
-      
+    <aside className="w-full lg:w-[30%] flex flex-col gap-8 sticky top-24 self-start">
+
+      {/* ── AFFILIATE BANNER (position=blog) ── */}
+      {/* Auto-hidden if no active banner configured for this position */}
+      <AffiliateBanner position="blog" layout="vertical" />
+
       {/* SECTION 1: Categories */}
       <div className="pb-8 border-b border-gray-200">
         <h3 className="text-sm font-black text-gray-900 mb-6 uppercase tracking-widest flex items-center gap-2">
@@ -84,9 +89,9 @@ export default async function BlogSidebar() {
           Get the latest industry insights delivered directly to your inbox.
         </p>
         <form className="flex flex-col gap-3">
-          <input 
-            type="email" 
-            placeholder="Email address" 
+          <input
+            type="email"
+            placeholder="Email address"
             className="w-full px-4 py-3 rounded-xl text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent"
             required
           />

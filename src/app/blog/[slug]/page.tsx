@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ArrowLeft, Clock, Link2, Mail } from "lucide-react";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import ReadingProgress from "@/components/blog/ReadingProgress";
+import AffiliateBanner from "@/components/ui/AffiliateBanner";
 
 export const dynamic = 'force-dynamic';
 
@@ -133,17 +134,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   dangerouslySetInnerHTML={{ __html: post.content }}
                 />
 
+                {/* ── Mid-article affiliate banner (position=blog_post) ── */}
+                {/* Appears after the article body — auto-hidden if no banner configured */}
+                <div className="my-10">
+                  <AffiliateBanner position="blog_post" layout="card" />
+                </div>
+
                 {/* Social Sharing */}
                 <div className="mt-16 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-6">
                   <div className="font-bold text-gray-900">Share this article:</div>
                   <div className="flex items-center gap-3">
-                    <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#1DA1F2] hover:text-white transition-all">
+                    <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://www.shop.nexuscalculator.net/blog/${post.slug}`)}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#1DA1F2] hover:text-white transition-all">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
                     </a>
-                    <a href={`https://www.facebook.com/sharer/sharer.php?u=`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#4267B2] hover:text-white transition-all">
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.shop.nexuscalculator.net/blog/${post.slug}`)}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#4267B2] hover:text-white transition-all">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
                     </a>
-                    <a href={`https://www.linkedin.com/shareArticle?mini=true&title=${encodeURIComponent(post.title)}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#0077b5] hover:text-white transition-all">
+                    <a href={`https://www.linkedin.com/shareArticle?mini=true&title=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://www.shop.nexuscalculator.net/blog/${post.slug}`)}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-[#0077b5] hover:text-white transition-all">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
                     </a>
                     <button className="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center hover:bg-brand-dark hover:text-white transition-all">

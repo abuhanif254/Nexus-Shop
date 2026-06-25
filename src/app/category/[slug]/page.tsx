@@ -5,6 +5,7 @@ import MobileFilterWrapper from "@/components/category/MobileFilterWrapper";
 import CategoryPills from "@/components/category/CategoryPills";
 import SortBar from "@/components/category/SortBar";
 import ProductGrid from "@/components/category/ProductGrid";
+import AffiliateBanner from "@/components/ui/AffiliateBanner";
 import type { Metadata } from "next";
 import { db } from "@/db";
 import { categories, brands } from "@/db/schema";
@@ -65,6 +66,9 @@ export default async function CategoryPage(
           <ChevronRight size={14} />
           <span className="text-gray-400 capitalize">{slug.replace(/-/g, ' ')}</span>
         </nav>
+
+        {/* Affiliate Banner — position=category (auto-hidden if none configured) */}
+        <AffiliateBanner position="category" layout="horizontal" className="mb-6" />
 
         {/* Page Header */}
         <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-8 flex justify-between items-end">

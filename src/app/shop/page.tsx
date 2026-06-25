@@ -6,6 +6,7 @@ import CategoryPills from "@/components/category/CategoryPills";
 import SortBar from "@/components/category/SortBar";
 import ProductGrid from "@/components/category/ProductGrid";
 import ShopHeroBanner from "@/components/shop/ShopHeroBanner";
+import AffiliateBanner from "@/components/ui/AffiliateBanner";
 import type { Metadata } from "next";
 import { db } from "@/db";
 import { categories, brands } from "@/db/schema";
@@ -58,6 +59,9 @@ export default async function ShopPage() {
 
         {/* Hero Banner */}
         <ShopHeroBanner />
+
+        {/* Affiliate Banner — position=shop (auto-hidden if none configured) */}
+        <AffiliateBanner position="shop" layout="horizontal" className="mb-6" />
 
         {/* Page Header */}
         <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm mb-6 flex justify-between items-end">
