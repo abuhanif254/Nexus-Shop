@@ -11,6 +11,8 @@ import ToastProvider from "@/components/ui/ToastProvider";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import { NextAuthProvider } from "@/components/providers/SessionProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -116,6 +118,10 @@ export default function RootLayout({
             <ToastProvider />
           </NextAuthProvider>
         </ThemeProvider>
+
+        {/* ── Vercel Platform Telemetry (zero-config, no-op in dev) ── */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
