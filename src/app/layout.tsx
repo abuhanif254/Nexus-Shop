@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
@@ -52,12 +52,22 @@ export const metadata: Metadata = {
   alternates: {
     types: { 'application/rss+xml': `${SITE_URL}/feed.xml` },
   },
-  // Explicit viewport for consistent rendering across devices
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
+  // Google Search Console site verification
+  // Replace the empty string with your token from GSC → Settings → Ownership verification
+  verification: {
+    google: '', // e.g. 'abc123XYZ...'
   },
+};
+
+// Viewport must be a separate export in Next.js 14+ (metadata.viewport is deprecated)
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)',  color: '#0f1115' },
+  ],
 };
 
 export default function RootLayout({
@@ -74,6 +84,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://cdn.pixabay.com" />
+        <link rel="dns-prefetch" href="https://ik.imagekit.io" />
       </head>
       <body className={`antialiased pb-24 md:pb-0 ${outfit.variable} ${inter.variable} font-sans`}>
 
@@ -102,7 +113,12 @@ export default function RootLayout({
                   "@id": `${SITE_URL}/#organization`,
                   "name": "Nexus Shop",
                   "url": SITE_URL,
-                  "logo": { "@type": "ImageObject", "url": `${SITE_URL}/logo.png` },
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": `${SITE_URL}/logo.png`,
+                    "width": 512,
+                    "height": 512,
+                  },
                   "parentOrganization": {
                     "@type": "Organization",
                     "name": "Sahera Group",
@@ -110,7 +126,9 @@ export default function RootLayout({
                   },
                   "address": {
                     "@type": "PostalAddress",
-                    "addressLocality": "Dhaka",
+                    "streetAddress": "2300 Kishoreganj Sadar",
+                    "addressLocality": "Kishoreganj",
+                    "addressRegion": "Dhaka",
                     "addressCountry": "BD"
                   }
                 }

@@ -2,14 +2,76 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShieldCheck, Truck, Headphones, Globe, ArrowRight, Award, Users, MapPin } from "lucide-react";
 
+const SITE_URL = 'https://www.shop.nexuscalculator.net';
+
 export const metadata = {
   title: "About Us | Nexus Shop by Sahera Group",
-  description: "Learn about Nexus Shop, a proud company of Sahera Group. Discover our mission, values, and commitment to premium e-commerce in Bangladesh and beyond.",
+  description: "Learn about Nexus Shop, a proud company of Sahera Group. Discover our mission, editorial standards, and commitment to premium e-commerce in Bangladesh and beyond.",
+  alternates: { canonical: `${SITE_URL}/about` },
+  openGraph: {
+    title: "About Nexus Shop | Sahera Group",
+    description: "Nexus Shop editorial mission, team, and values.",
+    url: `${SITE_URL}/about`,
+    type: "website",
+  },
+};
+
+// Organization + AboutPage JSON-LD — major E-E-A-T signal for Google News
+const organizationLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "Nexus Shop",
+      alternateName: "The Nexus Journal",
+      url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/logo.png`,
+        width: 512,
+        height: 512,
+      },
+      foundingDate: "2024",
+      description: "Nexus Shop is a premium affiliate marketing and e-commerce platform, operated by Sahera Group, headquartered in Kishoreganj, Bangladesh.",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "2300 Kishoreganj Sadar",
+        addressLocality: "Kishoreganj",
+        addressRegion: "Dhaka",
+        addressCountry: "BD",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: "support@shop.nexuscalculator.net",
+        availableLanguage: ["English"],
+      },
+      parentOrganization: {
+        "@type": "Organization",
+        name: "Sahera Group",
+        url: SITE_URL,
+      },
+    },
+    {
+      "@type": "AboutPage",
+      "@id": `${SITE_URL}/about`,
+      url: `${SITE_URL}/about`,
+      name: "About Nexus Shop",
+      isPartOf: { "@type": "WebSite", "@id": `${SITE_URL}/#website` },
+      about: { "@type": "Organization", "@id": `${SITE_URL}/#organization` },
+    },
+  ],
 };
 
 export default function AboutPage() {
   return (
     <div className="bg-white">
+      {/* Organization + AboutPage JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+      />
       {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden bg-gray-50 pt-24 pb-32">
         <div className="absolute inset-0 z-0">
@@ -186,7 +248,65 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 6. CTA SECTION */}
+      {/* 6. EDITORIAL STANDARDS — required E-E-A-T content for Google News */}
+      <section className="py-24 bg-white border-t border-gray-100" id="editorial-standards">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-brand-orange font-bold tracking-wider uppercase text-sm mb-3">Transparency</p>
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">Editorial Standards &amp; Policies</h2>
+            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+              We believe readers deserve to know exactly who is writing, how we pick products, and how we handle corrections.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {[
+              {
+                title: "Our Editorial Mission",
+                body: "The Nexus Journal publishes original, research-backed articles on affiliate marketing, technology, and lifestyle. Every piece is written or reviewed by a named editor before publication. We do not publish auto-generated or scraped content.",
+              },
+              {
+                title: "Affiliate Disclosure",
+                body: "Some links on this site are affiliate links. If you click and make a purchase, we may earn a commission at no extra cost to you. This never influences our editorial opinions — we only recommend products we genuinely believe in.",
+              },
+              {
+                title: "Corrections Policy",
+                body: "We are committed to accuracy. If you find a factual error, please email corrections@shop.nexuscalculator.net. Significant corrections are noted at the top of the article with the date of revision. Minor typos are fixed silently.",
+              },
+              {
+                title: "Content Independence",
+                body: "Sponsored posts are clearly labelled 'Sponsored' or 'Advertisement' in both the headline and the article body. Sponsored content does not influence our editorial coverage of any brand, product, or category.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="bg-gray-50 rounded-2xl p-8 border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{item.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{item.body}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Contact info — required for Google News eligibility */}
+          <div className="bg-brand-orange/5 border border-brand-orange/20 rounded-2xl p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-gray-900 mb-1">Contact the Editorial Team</h3>
+              <p className="text-gray-600 text-sm">For story tips, corrections, or press inquiries:</p>
+              <div className="mt-3 space-y-1 text-sm">
+                <p><span className="font-semibold text-gray-700">General:</span> <a href="mailto:support@shop.nexuscalculator.net" className="text-brand-orange hover:underline">support@shop.nexuscalculator.net</a></p>
+                <p><span className="font-semibold text-gray-700">Corrections:</span> <a href="mailto:corrections@shop.nexuscalculator.net" className="text-brand-orange hover:underline">corrections@shop.nexuscalculator.net</a></p>
+                <p><span className="font-semibold text-gray-700">Address:</span> 2300 Kishoreganj Sadar, Dhaka, Bangladesh</p>
+              </div>
+            </div>
+            <Link
+              href="/contact"
+              className="shrink-0 bg-brand-orange text-white px-6 py-3 rounded-full font-bold hover:bg-orange-600 transition-colors text-sm"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. CTA SECTION */}
       <section className="py-24 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-900 rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden shadow-2xl">

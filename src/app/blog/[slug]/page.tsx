@@ -39,23 +39,45 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const post = data[0];
   const siteUrl = "https://www.shop.nexuscalculator.net";
+  const postUrl = `${siteUrl}/blog/${post.slug}`;
+  const plainText = post.content.replace(/<[^>]*>?/gm, "");
+  const description = post.seoDescription || post.excerpt || plainText.substring(0, 160);
+  const tags = post.tags ? post.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
 
   return {
     title: post.seoTitle || `${post.title} | Nexus Shop Blog`,
-    description: post.seoDescription || post.excerpt || post.content.replace(/<[^>]*>?/gm, "").substring(0, 160),
+    description,
+    // ── Canonical URL — critical for Search Console ──────────────────
+    alternates: {
+      canonical: postUrl,
+    },
+    // ── Open Graph — include dimensions so platforms don't need to fetch ──
     openGraph: {
       title: post.seoTitle || post.title,
-      description: post.seoDescription || post.excerpt || "",
-      url: `${siteUrl}/blog/${post.slug}`,
+      description,
+      url: postUrl,
       type: "article",
-      images: post.featuredImage ? [{ url: post.featuredImage }] : [],
+      siteName: "Nexus Shop",
+      images: post.featuredImage
+        ? [{ url: post.featuredImage, width: 1200, height: 630, alt: post.title }]
+        : [],
+      // article-specific OG tags
       publishedTime: post.publishedAt?.toISOString(),
+      modifiedTime: post.updatedAt?.toISOString(),
+      authors: post.author ? [`${siteUrl}/about`] : [],
+      section: post.category || "Blog",
+      tags,
     },
+    // ── Twitter / X card ────────────────────────────────────────────
     twitter: {
       card: "summary_large_image",
       title: post.seoTitle || post.title,
-      description: post.seoDescription || post.excerpt || "",
+      description,
       images: post.featuredImage ? [post.featuredImage] : [],
+    },
+    // ── Google News keywords meta tag ────────────────────────────────
+    other: {
+      ...(tags.length > 0 && { 'news_keywords': tags.join(', ') }),
     },
   };
 }
@@ -79,28 +101,82 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .orderBy(desc(posts.publishedAt))
     .limit(3);
 
-  const jsonLd = {
+
+
+  const plainText = post.content.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim();
+  const articleBodyExcerpt = plainText.substring(0, 500);
+
+  // ── NewsArticle JSON-LD — all fields required or recommended by Google ──
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.seoTitle || post.title,
-    description: post.seoDescription || post.excerpt || "",
-    image: post.featuredImage ? [post.featuredImage] : [],
+    // NewsArticle is preferred over BlogPosting for Google News inclusion
+    "@type": "NewsArticle",
+    "@id": postUrl,
+    headline: (post.seoTitle || post.title).substring(0, 110), // Google recommends ≤110 chars
+    description: post.seoDescription || post.excerpt || plainText.substring(0, 300),
+    // image: provide as ImageObject for maximum schema richness
+    image: post.featuredImage
+      ? [{
+          "@type": "ImageObject",
+          url: post.featuredImage,
+          // Google requires min 1200px wide for Top Stories; we declare it
+          width: 1200,
+          height: 630,
+        }]
+      : [],
     datePublished: post.publishedAt?.toISOString(),
-    dateModified: post.updatedAt?.toISOString(),
+    dateModified: post.updatedAt?.toISOString() || post.publishedAt?.toISOString(),
+    inLanguage: "en-US",
     url: postUrl,
+    // author — link to /about for E-E-A-T signal
     author: [{
       "@type": post.author ? "Person" : "Organization",
-      name: post.author || "Nexus Shop",
-      url: siteUrl,
+      name: post.author || "Nexus Shop Editorial Team",
+      url: `${siteUrl}/about`,
     }],
+    // publisher — required with logo as ImageObject (min 112×112px)
     publisher: {
       "@type": "Organization",
-      name: "Nexus Shop",
+      name: "The Nexus Journal",
       url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/logo.png`,
+        width: 512,
+        height: 512,
+      },
     },
-    ...(post.tags && { keywords: post.tags }),
-    ...(post.category && { articleSection: post.category }),
-    wordCount: post.content.replace(/<[^>]*>?/gm, "").split(/\s+/).filter(Boolean).length,
+    // mainEntityOfPage — links article to its canonical WebPage entity
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": postUrl,
+    },
+    // isPartOf — links this article to the WebSite entity in root layout
+    isPartOf: {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      name: "Nexus Shop",
+    },
+    // speakable — tells Google Assistant which sections to read aloud
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".article-headline", ".article-lead"],
+    },
+    articleBody: articleBodyExcerpt,
+    ...(post.tags      && { keywords: post.tags }),
+    ...(post.category  && { articleSection: post.category }),
+    wordCount: plainText.split(/\s+/).filter(Boolean).length,
+  };
+
+  // ── BreadcrumbList — required for rich results in Search Console ──
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home",  item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Blog",  item: `${siteUrl}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
+    ],
   };
 
   return (
@@ -109,8 +185,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <ReadingProgress />
       {/* Silent view counter */}
       <ViewCounter slug={post.slug} />
-      {/* JSON-LD */}
+      {/* NewsArticle JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {/* BreadcrumbList JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       {/* ──────────────────────────────────────────
           HERO — cinematic full-width header
@@ -164,14 +242,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             ))}
           </div>
 
-          {/* Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.08] tracking-tight mb-6 max-w-4xl">
+          {/* Title — .article-headline matches speakable schema cssSelector */}
+          <h1 className="article-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.08] tracking-tight mb-6 max-w-4xl">
             {post.title}
           </h1>
 
-          {/* Excerpt */}
+          {/* Excerpt — .article-lead matches speakable schema cssSelector */}
           {post.excerpt && (
-            <p className="text-lg text-gray-300 leading-relaxed max-w-2xl mb-8">{post.excerpt}</p>
+            <p className="article-lead text-lg text-gray-300 leading-relaxed max-w-2xl mb-8">{post.excerpt}</p>
           )}
 
           {/* Meta strip */}
