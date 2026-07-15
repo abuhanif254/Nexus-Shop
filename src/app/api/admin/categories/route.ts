@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { categories } from '@/db/schema';
 import { desc } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
+import { revalidateCachePath } from '@/actions/revalidate';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       image: image || null
     }).returning();
 
-    revalidatePath('/', 'layout');
+    await revalidateCachePath('/', 'layout');
 
     return NextResponse.json({ success: true, data: newCategory[0] });
   } catch (error: any) {

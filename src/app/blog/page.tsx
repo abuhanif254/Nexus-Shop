@@ -9,7 +9,7 @@ import AffiliateBanner from "@/components/ui/AffiliateBanner";
 import CategoryFilter from "@/components/blog/CategoryFilter";
 import type { Metadata } from "next";
 
-export const revalidate = 60; // ISR: revalidate every 60s
+
 
 export const metadata: Metadata = {
   title: "Blog — The Nexus Journal | Nexus Shop",

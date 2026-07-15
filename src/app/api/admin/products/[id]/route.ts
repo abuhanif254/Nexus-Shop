@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { products } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
+import { revalidateCachePath } from '@/actions/revalidate';
 import { auth } from '@/auth';
 
 
@@ -37,7 +37,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     await db.update(products).set(updateData).where(eq(products.id, id));
 
-    revalidatePath('/', 'layout');
+    await revalidateCachePath('/', 'layout');
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
@@ -52,7 +52,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     
     await db.delete(products).where(eq(products.id, id));
 
-    revalidatePath('/', 'layout');
+    await revalidateCachePath('/', 'layout');
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

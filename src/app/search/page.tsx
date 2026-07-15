@@ -6,7 +6,7 @@ import SortBar from "@/components/category/SortBar";
 import ProductGrid from "@/components/category/ProductGrid";
 import type { Metadata } from "next";
 
-export const revalidate = 3600; // Cache for 1 hour
+
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string }> }): Promise<Metadata> {
   const { q } = await searchParams;

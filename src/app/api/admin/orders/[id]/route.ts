@@ -5,7 +5,7 @@ import { db } from "@/db";
 import { orders } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
-import { revalidatePath } from "next/cache";
+import { revalidateCachePath } from "@/actions/revalidate";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -48,7 +48,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       .set(updateData)
       .where(eq(orders.id, id));
 
-    revalidatePath('/', 'layout');
+    await revalidateCachePath('/', 'layout');
 
     return NextResponse.json({ success: true, message: "Order updated" }, { status: 200 });
 

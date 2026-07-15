@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 import { db } from "@/db";
 import { categories, brands } from "@/db/schema";
 
-export const revalidate = 3600; // Cache for 1 hour
+
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

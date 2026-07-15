@@ -14,10 +14,6 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 import type { Metadata } from "next";
 
-// ISR — revalidate every hour; avoids the cold-start penalty of force-dynamic
-// while keeping product data reasonably fresh.
-export const revalidate = 3600;
-
 export const metadata: Metadata = {
   title: "Nexus Shop | Premium Affiliate Deals & Expert Picks",
   description: "Discover the best affiliate deals, expert product picks and industry insights at Nexus Shop — powered by Sahera Group.",

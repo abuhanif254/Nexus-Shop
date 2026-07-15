@@ -15,7 +15,7 @@ import ViewCounter from "@/components/blog/ViewCounter";
 import TableOfContents from "@/components/blog/TableOfContents";
 import CopyLinkButton from "@/components/blog/CopyLinkButton";
 
-export const revalidate = 30; // ISR: fresh enough for view counts, avoids cold starts
+
 
 function getReadingTime(content: string) {
   const text = content.replace(/<[^>]*>?/gm, "");

@@ -4,7 +4,7 @@ import { posts } from '@/db/schema';
 import { eq, gte, and } from 'drizzle-orm';
 
 // Google News Sitemap — refresh every 15 minutes so fresh articles appear fast
-export const revalidate = 900;
+
 
 const SITE_URL = 'https://www.shop.nexuscalculator.net';
 const PUBLICATION_NAME = 'The Nexus Journal';

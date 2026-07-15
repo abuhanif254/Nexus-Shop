@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 import { db } from "@/db";
 import { categories, brands } from "@/db/schema";
 
-export const revalidate = 3600; // Cache for 1 hour
+
 
 export const metadata: Metadata = {
   title: "Shop All Products | Nexus Shop",
